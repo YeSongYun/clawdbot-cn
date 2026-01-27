@@ -1,0 +1,16 @@
+{
+  "title": "帮助",
+  "usage": "用法",
+  "commands": "命令",
+  "options": "选项",
+  "examples": "示例",
+  "description": "描述",
+  "aliases": "别名",
+  "default": "默认",
+  "required": "必需",
+  "optional": "可选",
+  "moreInfo": "更多信息",
+  "seeAlso": "另请参阅",
+  "version": "版本",
+  "documentation": "文档：https://docs.clawd.bot"
+}

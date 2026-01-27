@@ -39,6 +39,7 @@ import type { SkillCommandSpec } from "../agents/skills.js";
 import type { CommandCategory } from "./commands-registry.types.js";
 import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from "./thinking.js";
 import type { MediaUnderstandingDecision } from "../media-understanding/types.js";
+import { t, ti } from "../i18n/index.js";
 
 type AgentConfig = Partial<NonNullable<NonNullable<ClawdbotConfig["agents"]>["defaults"]>>;
 
@@ -128,14 +129,14 @@ export const formatContextUsageShort = (
 ) => `Context ${formatTokens(total, contextTokens ?? null)}`;
 
 const formatAge = (ms?: number | null) => {
-  if (!ms || ms < 0) return "unknown";
+  if (!ms || ms < 0) return t("status", "time.unknown", "unknown");
   const minutes = Math.round(ms / 60_000);
-  if (minutes < 1) return "just now";
-  if (minutes < 60) return `${minutes}m ago`;
+  if (minutes < 1) return t("status", "time.justNow", "just now");
+  if (minutes < 60) return ti("status", "time.minutesAgo", `${minutes}m ago`, { n: minutes });
   const hours = Math.round(minutes / 60);
-  if (hours < 48) return `${hours}h ago`;
+  if (hours < 48) return ti("status", "time.hoursAgo", `${hours}h ago`, { n: hours });
   const days = Math.round(hours / 24);
-  return `${days}d ago`;
+  return ti("status", "time.daysAgo", `${days}d ago`, { n: days });
 };
 
 const formatQueueDetails = (queue?: QueueStatus) => {
@@ -218,7 +219,10 @@ const formatUsagePair = (input?: number | null, output?: number | null) => {
   if (input == null && output == null) return null;
   const inputLabel = typeof input === "number" ? formatTokenCount(input) : "?";
   const outputLabel = typeof output === "number" ? formatTokenCount(output) : "?";
-  return `🧮 Tokens: ${inputLabel} in / ${outputLabel} out`;
+  const tokensLabel = t("status", "tokens.label", "Tokens");
+  const inLabel = t("status", "tokens.in", "in");
+  const outLabel = t("status", "tokens.out", "out");
+  return `🧮 ${tokensLabel}: ${inputLabel} ${inLabel} / ${outputLabel} ${outLabel}`;
 };
 
 const formatMediaUnderstandingLine = (decisions?: MediaUnderstandingDecision[]) => {
@@ -274,7 +278,11 @@ const formatVoiceModeLine = (
   const provider = getTtsProvider(ttsConfig, prefsPath);
   const maxLength = getTtsMaxLength(prefsPath);
   const summarize = isSummarizationEnabled(prefsPath) ? "on" : "off";
-  return `🔊 Voice: ${autoMode} · provider=${provider} · limit=${maxLength} · summary=${summarize}`;
+  const voiceLabel = t("status", "voice.label", "Voice");
+  const providerLabel = t("status", "voice.provider", "provider");
+  const limitLabel = t("status", "voice.limit", "limit");
+  const summaryLabel = t("status", "voice.summary", "summary");
+  return `🔊 ${voiceLabel}: ${autoMode} · ${providerLabel}=${provider} · ${limitLabel}=${maxLength} · ${summaryLabel}=${summarize}`;
 };
 
 export function buildStatusMessage(args: StatusArgs): string {
@@ -331,9 +339,11 @@ export function buildStatusMessage(args: StatusArgs): string {
   const runtime = { label: resolveRuntimeLabel(args) };
 
   const updatedAt = entry?.updatedAt;
+  const sessionLabel = t("status", "session.label", "Session");
+  const noActivityLabel = t("status", "session.noActivity", "no activity");
   const sessionLine = [
-    `Session: ${args.sessionKey ?? "unknown"}`,
-    typeof updatedAt === "number" ? `updated ${formatAge(now - updatedAt)}` : "no activity",
+    `${sessionLabel}: ${args.sessionKey ?? t("status", "time.unknown", "unknown")}`,
+    typeof updatedAt === "number" ? `${formatAge(now - updatedAt)}` : noActivityLabel,
   ]
     .filter(Boolean)
     .join(" • ");
@@ -347,34 +357,45 @@ export function buildStatusMessage(args: StatusArgs): string {
     ? (args.groupActivation ?? entry?.groupActivation ?? "mention")
     : undefined;
 
+  const contextLabel = t("status", "context.label", "Context");
+  const compactionsLabel = t("status", "context.compactions", "Compactions");
   const contextLine = [
-    `Context: ${formatTokens(totalTokens, contextTokens ?? null)}`,
-    `🧹 Compactions: ${entry?.compactionCount ?? 0}`,
+    `${contextLabel}: ${formatTokens(totalTokens, contextTokens ?? null)}`,
+    `🧹 ${compactionsLabel}: ${entry?.compactionCount ?? 0}`,
   ]
     .filter(Boolean)
     .join(" · ");
 
-  const queueMode = args.queue?.mode ?? "unknown";
+  const queueMode = args.queue?.mode ?? t("status", "time.unknown", "unknown");
   const queueDetails = formatQueueDetails(args.queue);
   const verboseLabel =
-    verboseLevel === "full" ? "verbose:full" : verboseLevel === "on" ? "verbose" : null;
+    verboseLevel === "full"
+      ? `${t("status", "verbose", "verbose")}:full`
+      : verboseLevel === "on"
+        ? t("status", "verbose", "verbose")
+        : null;
   const elevatedLabel =
     elevatedLevel && elevatedLevel !== "off"
       ? elevatedLevel === "on"
-        ? "elevated"
-        : `elevated:${elevatedLevel}`
+        ? t("status", "elevated", "elevated")
+        : `${t("status", "elevated", "elevated")}:${elevatedLevel}`
       : null;
+  const runtimeLabel = t("status", "runtime.label", "Runtime");
+  const thinkLabel = t("status", "think.label", "Think");
+  const reasoningLabel = t("status", "reasoning.label", "Reasoning");
   const optionParts = [
-    `Runtime: ${runtime.label}`,
-    `Think: ${thinkLevel}`,
+    `${runtimeLabel}: ${runtime.label}`,
+    `${thinkLabel}: ${thinkLevel}`,
     verboseLabel,
-    reasoningLevel !== "off" ? `Reasoning: ${reasoningLevel}` : null,
+    reasoningLevel !== "off" ? `${reasoningLabel}: ${reasoningLevel}` : null,
     elevatedLabel,
   ];
   const optionsLine = optionParts.filter(Boolean).join(" · ");
+  const activationLabel = t("status", "activation.label", "Activation");
+  const queueLabel = t("status", "queue.label", "Queue");
   const activationParts = [
-    groupActivationValue ? `👥 Activation: ${groupActivationValue}` : null,
-    `🪢 Queue: ${queueMode}${queueDetails}`,
+    groupActivationValue ? `👥 ${activationLabel}: ${groupActivationValue}` : null,
+    `🪢 ${queueLabel}: ${queueMode}${queueDetails}`,
   ];
   const activationLine = activationParts.filter(Boolean).join(" · ");
 
@@ -402,13 +423,16 @@ export function buildStatusMessage(args: StatusArgs): string {
       : undefined;
   const costLabel = showCost && hasUsage ? formatUsd(cost) : undefined;
 
-  const modelLabel = model ? `${provider}/${model}` : "unknown";
+  const modelLabel = model ? `${provider}/${model}` : t("status", "time.unknown", "unknown");
   const authLabel = authLabelValue ? ` · 🔑 ${authLabelValue}` : "";
-  const modelLine = `🧠 Model: ${modelLabel}${authLabel}`;
+  const modelLabelText = t("status", "model.label", "Model");
+  const modelLine = `🧠 ${modelLabelText}: ${modelLabel}${authLabel}`;
   const commit = resolveCommitHash();
-  const versionLine = `🦞 Clawdbot ${VERSION}${commit ? ` (${commit})` : ""}`;
+  const versionLabel = t("status", "version.label", "Clawdbot");
+  const versionLine = `🦞 ${versionLabel} ${VERSION}${commit ? ` (${commit})` : ""}`;
   const usagePair = formatUsagePair(inputTokens, outputTokens);
-  const costLine = costLabel ? `💵 Cost: ${costLabel}` : null;
+  const costLabelText = t("status", "cost.label", "Cost");
+  const costLine = costLabel ? `💵 ${costLabelText}: ${costLabel}` : null;
   const usageCostLine =
     usagePair && costLine ? `${usagePair} · ${costLine}` : (usagePair ?? costLine);
   const mediaLine = formatMediaUnderstandingLine(args.mediaDecisions);
@@ -433,13 +457,13 @@ export function buildStatusMessage(args: StatusArgs): string {
 }
 
 const CATEGORY_LABELS: Record<CommandCategory, string> = {
-  session: "Session",
-  options: "Options",
-  status: "Status",
-  management: "Management",
-  media: "Media",
-  tools: "Tools",
-  docks: "Docks",
+  session: t("categories", "session", "Session"),
+  options: t("categories", "options", "Options"),
+  status: t("categories", "status", "Status"),
+  management: t("categories", "management", "Management"),
+  media: t("categories", "media", "Media"),
+  tools: t("categories", "tools", "Tools"),
+  docks: t("categories", "docks", "Docks"),
 };
 
 const CATEGORY_ORDER: CommandCategory[] = [
@@ -469,28 +493,29 @@ function groupCommandsByCategory(
 }
 
 export function buildHelpMessage(cfg?: ClawdbotConfig): string {
-  const lines = ["ℹ️ Help", ""];
+  const helpTitle = t("status", "help.title", "Help");
+  const lines = [`ℹ️ ${helpTitle}`, ""];
 
-  lines.push("Session");
+  lines.push(t("status", "help.session", "Session"));
   lines.push("  /new  |  /reset  |  /compact [instructions]  |  /stop");
   lines.push("");
 
   const optionParts = ["/think <level>", "/model <id>", "/verbose on|off"];
   if (cfg?.commands?.config === true) optionParts.push("/config");
   if (cfg?.commands?.debug === true) optionParts.push("/debug");
-  lines.push("Options");
+  lines.push(t("status", "help.options", "Options"));
   lines.push(`  ${optionParts.join("  |  ")}`);
   lines.push("");
 
-  lines.push("Status");
+  lines.push(t("status", "help.status", "Status"));
   lines.push("  /status  |  /whoami  |  /context");
   lines.push("");
 
-  lines.push("Skills");
+  lines.push(t("status", "help.skills", "Skills"));
   lines.push("  /skill <name> [input]");
 
   lines.push("");
-  lines.push("More: /commands for full list");
+  lines.push(t("status", "help.more", "More: /commands for full list"));
 
   return lines.join("\n");
 }
@@ -554,7 +579,7 @@ function buildCommandItems(
   for (const command of pluginCommands) {
     const pluginLabel = command.pluginId ? ` (${command.pluginId})` : "";
     items.push({
-      label: "Plugins",
+      label: t("categories", "plugins", "Plugins"),
       text: `/${command.name}${pluginLabel} - ${command.description}`,
     });
   }
@@ -603,7 +628,8 @@ export function buildCommandsMessagePaginated(
   const items = buildCommandItems(commands, pluginCommands);
 
   if (!isTelegram) {
-    const lines = ["ℹ️ Slash commands", ""];
+    const commandsTitle = t("status", "commands.title", "Slash commands");
+    const lines = [`ℹ️ ${commandsTitle}`, ""];
     lines.push(formatCommandList(items));
     return {
       text: lines.join("\n").trim(),
@@ -621,7 +647,11 @@ export function buildCommandsMessagePaginated(
   const endIndex = startIndex + COMMANDS_PER_PAGE;
   const pageItems = items.slice(startIndex, endIndex);
 
-  const lines = [`ℹ️ Commands (${currentPage}/${totalPages})`, ""];
+  const pageTitle = ti("status", "commands.pageTitle", `Commands (${currentPage}/${totalPages})`, {
+    current: currentPage,
+    total: totalPages,
+  });
+  const lines = [`ℹ️ ${pageTitle}`, ""];
   lines.push(formatCommandList(pageItems));
 
   return {

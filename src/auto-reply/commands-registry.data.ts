@@ -1,4 +1,5 @@
 import { listChannelDocks } from "../channels/dock.js";
+import { t, ti } from "../i18n/index.js";
 import { getActivePluginRegistry } from "../plugins/runtime.js";
 import { listThinkingLevels } from "./thinking.js";
 import { COMMAND_ARG_FORMATTERS } from "./commands-args.js";
@@ -31,15 +32,34 @@ function defineChatCommand(command: DefineChatCommandInput): ChatCommandDefiniti
     command.scope ?? (command.nativeName ? (aliases.length ? "both" : "native") : "text");
   const acceptsArgs = command.acceptsArgs ?? Boolean(command.args?.length);
   const argsParsing = command.argsParsing ?? (command.args?.length ? "positional" : "none");
+
+  // 翻译命令描述
+  const translatedDescription = t("commands", `${command.key}.description`, command.description);
+
+  // 翻译参数描述
+  const translatedArgs = command.args?.map((arg) => ({
+    ...arg,
+    description: t("commands", `${command.key}.args.${arg.name}`, arg.description),
+  }));
+
+  // 翻译参数菜单
+  let translatedArgsMenu = command.argsMenu;
+  if (command.argsMenu && typeof command.argsMenu === "object" && "title" in command.argsMenu) {
+    translatedArgsMenu = {
+      ...command.argsMenu,
+      title: t("commands", `${command.key}.argsMenu.title`, command.argsMenu.title),
+    };
+  }
+
   return {
     key: command.key,
     nativeName: command.nativeName,
-    description: command.description,
+    description: translatedDescription,
     acceptsArgs,
-    args: command.args,
+    args: translatedArgs,
     argsParsing,
     formatArgs: command.formatArgs,
-    argsMenu: command.argsMenu,
+    argsMenu: translatedArgsMenu,
     textAliases: aliases,
     scope,
     category: command.category,
@@ -52,7 +72,9 @@ function defineDockCommand(dock: ChannelDock): ChatCommandDefinition {
   return defineChatCommand({
     key: `dock:${dock.id}`,
     nativeName: `dock_${dock.id}`,
-    description: `Switch to ${dock.id} for replies.`,
+    description: ti("commands", "dock.description", `Switch to ${dock.id} for replies.`, {
+      dock: dock.id,
+    }),
     textAliases: [`/dock-${dock.id}`, `/dock_${dock.id}`],
     category: "docks",
   });

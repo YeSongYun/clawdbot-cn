@@ -3,6 +3,7 @@ import type { SessionEntry } from "../../config/sessions.js";
 import { updateSessionStore } from "../../config/sessions.js";
 import { logVerbose } from "../../globals.js";
 import { createInternalHookEvent, triggerInternalHook } from "../../hooks/internal-hooks.js";
+import { tr, tri } from "../../i18n/overlay-replies.js";
 import { scheduleGatewaySigusr1Restart, triggerClawdbotRestart } from "../../infra/restart.js";
 import { parseActivationCommand } from "../group-activation.js";
 import { parseSendPolicyCommand } from "../send-policy.js";
@@ -54,7 +55,7 @@ export const handleActivationCommand: CommandHandler = async (params, allowTextC
   if (!params.isGroup) {
     return {
       shouldContinue: false,
-      reply: { text: "⚙️ Group activation only applies to group chats." },
+      reply: { text: `⚙️ ${tr("activation.groupOnly", "Group activation only applies to group chats.")}` },
     };
   }
   if (!params.command.isAuthorizedSender) {
@@ -66,7 +67,7 @@ export const handleActivationCommand: CommandHandler = async (params, allowTextC
   if (!activationCommand.mode) {
     return {
       shouldContinue: false,
-      reply: { text: "⚙️ Usage: /activation mention|always" },
+      reply: { text: `⚙️ ${tr("activation.usage", "Usage: /activation mention|always")}` },
     };
   }
   if (params.sessionEntry && params.sessionStore && params.sessionKey) {
@@ -83,7 +84,7 @@ export const handleActivationCommand: CommandHandler = async (params, allowTextC
   return {
     shouldContinue: false,
     reply: {
-      text: `⚙️ Group activation set to ${activationCommand.mode}.`,
+      text: `⚙️ ${tri("activation.set", `Group activation set to ${activationCommand.mode}.`, { mode: activationCommand.mode })}`,
     },
   };
 };
@@ -101,7 +102,7 @@ export const handleSendPolicyCommand: CommandHandler = async (params, allowTextC
   if (!sendPolicyCommand.mode) {
     return {
       shouldContinue: false,
-      reply: { text: "⚙️ Usage: /send on|off|inherit" },
+      reply: { text: `⚙️ ${tr("send.usage", "Usage: /send on|off|inherit")}` },
     };
   }
   if (params.sessionEntry && params.sessionStore && params.sessionKey) {
@@ -126,7 +127,7 @@ export const handleSendPolicyCommand: CommandHandler = async (params, allowTextC
         : "off";
   return {
     shouldContinue: false,
-    reply: { text: `⚙️ Send policy set to ${label}.` },
+    reply: { text: `⚙️ ${tri("send.set", `Send policy set to ${label}.`, { label })}` },
   };
 };
 
@@ -157,34 +158,41 @@ export const handleUsageCommand: CommandHandler = async (params, allowTextComman
       ? formatTokenCount(sessionSummary.totalTokens)
       : undefined;
     const sessionMissing = sessionSummary?.missingCostEntries ?? 0;
-    const sessionSuffix = sessionMissing > 0 ? " (partial)" : "";
+    const partialLabel = tr("usage.partial", "(partial)");
+    const sessionSuffix = sessionMissing > 0 ? ` ${partialLabel}` : "";
+    const tokensLabel = tr("usage.tokens", "tokens");
+    const naLabel = tr("usage.na", "n/a");
+    const sessionLabel = tr("usage.session", "Session");
     const sessionLine =
       sessionCost || sessionTokens
-        ? `Session ${sessionCost ?? "n/a"}${sessionSuffix}${sessionTokens ? ` · ${sessionTokens} tokens` : ""}`
-        : "Session n/a";
+        ? `${sessionLabel} ${sessionCost ?? naLabel}${sessionSuffix}${sessionTokens ? ` · ${sessionTokens} ${tokensLabel}` : ""}`
+        : `${sessionLabel} ${naLabel}`;
 
     const todayKey = new Date().toLocaleDateString("en-CA");
     const todayEntry = summary.daily.find((entry) => entry.date === todayKey);
     const todayCost = formatUsd(todayEntry?.totalCost);
     const todayMissing = todayEntry?.missingCostEntries ?? 0;
-    const todaySuffix = todayMissing > 0 ? " (partial)" : "";
-    const todayLine = `Today ${todayCost ?? "n/a"}${todaySuffix}`;
+    const todaySuffix = todayMissing > 0 ? ` ${partialLabel}` : "";
+    const todayLabel = tr("usage.today", "Today");
+    const todayLine = `${todayLabel} ${todayCost ?? naLabel}${todaySuffix}`;
 
     const last30Cost = formatUsd(summary.totals.totalCost);
     const last30Missing = summary.totals.missingCostEntries;
-    const last30Suffix = last30Missing > 0 ? " (partial)" : "";
-    const last30Line = `Last 30d ${last30Cost ?? "n/a"}${last30Suffix}`;
+    const last30Suffix = last30Missing > 0 ? ` ${partialLabel}` : "";
+    const last30Label = tr("usage.last30d", "Last 30d");
+    const last30Line = `${last30Label} ${last30Cost ?? naLabel}${last30Suffix}`;
 
+    const costTitle = tr("usage.cost", "Usage cost");
     return {
       shouldContinue: false,
-      reply: { text: `💸 Usage cost\n${sessionLine}\n${todayLine}\n${last30Line}` },
+      reply: { text: `💸 ${costTitle}\n${sessionLine}\n${todayLine}\n${last30Line}` },
     };
   }
 
   if (rawArgs && !requested) {
     return {
       shouldContinue: false,
-      reply: { text: "⚙️ Usage: /usage off|tokens|full|cost" },
+      reply: { text: `⚙️ ${tr("usage.usage", "Usage: /usage off|tokens|full|cost")}` },
     };
   }
 
@@ -209,7 +217,7 @@ export const handleUsageCommand: CommandHandler = async (params, allowTextComman
   return {
     shouldContinue: false,
     reply: {
-      text: `⚙️ Usage footer: ${next}.`,
+      text: `⚙️ ${tri("usage.footer", `Usage footer: ${next}.`, { mode: next })}`,
     },
   };
 };
@@ -227,7 +235,7 @@ export const handleRestartCommand: CommandHandler = async (params, allowTextComm
     return {
       shouldContinue: false,
       reply: {
-        text: "⚠️ /restart is disabled. Set commands.restart=true to enable.",
+        text: `⚠️ ${tr("restart.disabled", "/restart is disabled. Set commands.restart=true to enable.")}`,
       },
     };
   }
@@ -237,7 +245,7 @@ export const handleRestartCommand: CommandHandler = async (params, allowTextComm
     return {
       shouldContinue: false,
       reply: {
-        text: "⚙️ Restarting clawdbot in-process (SIGUSR1); back in a few seconds.",
+        text: `⚙️ ${tr("restart.sigusr1", "Restarting clawdbot in-process (SIGUSR1); back in a few seconds.")}`,
       },
     };
   }
@@ -247,14 +255,14 @@ export const handleRestartCommand: CommandHandler = async (params, allowTextComm
     return {
       shouldContinue: false,
       reply: {
-        text: `⚠️ Restart failed (${restartMethod.method}).${detail}`,
+        text: `⚠️ ${tri("restart.failed", `Restart failed (${restartMethod.method}).${detail}`, { method: restartMethod.method, detail })}`,
       },
     };
   }
   return {
     shouldContinue: false,
     reply: {
-      text: `⚙️ Restarting clawdbot via ${restartMethod.method}; give me a few seconds to come back online.`,
+      text: `⚙️ ${tri("restart.success", `Restarting clawdbot via ${restartMethod.method}; give me a few seconds to come back online.`, { method: restartMethod.method })}`,
     },
   };
 };
@@ -342,5 +350,5 @@ export const handleAbortTrigger: CommandHandler = async (params, allowTextComman
   } else if (params.command.abortKey) {
     setAbortMemory(params.command.abortKey, true);
   }
-  return { shouldContinue: false, reply: { text: "⚙️ Agent was aborted." } };
+  return { shouldContinue: false, reply: { text: `⚙️ ${tr("stop.aborted", "Agent was aborted.")}` } };
 };
