@@ -1,7 +1,7 @@
 {
-  "name": "moltbot",
-  "version": "2026.1.26",
-  "description": "WhatsApp gateway CLI (Baileys web) with Pi RPC agent",
+  "name": "clawdbot-cn",
+  "version": "2026.1.27",
+  "description": "Clawdbot 中文版 - AI 聊天机器人框架，支持多平台（Telegram、Discord、WhatsApp 等）",
   "type": "module",
   "main": "dist/index.js",
   "exports": {
@@ -15,6 +15,7 @@
     "clawdbot": "dist/entry.js"
   },
   "files": [
+    "locales/**",
     "dist/acp/**",
     "dist/agents/**",
     "dist/auto-reply/**",

@@ -44,7 +44,12 @@ function defineChatCommand(command: DefineChatCommandInput): ChatCommandDefiniti
 
   // 翻译参数菜单
   let translatedArgsMenu = command.argsMenu;
-  if (command.argsMenu && typeof command.argsMenu === "object" && "title" in command.argsMenu) {
+  if (
+    command.argsMenu &&
+    typeof command.argsMenu === "object" &&
+    "title" in command.argsMenu &&
+    command.argsMenu.title
+  ) {
     translatedArgsMenu = {
       ...command.argsMenu,
       title: t("commands", `${command.key}.argsMenu.title`, command.argsMenu.title),
