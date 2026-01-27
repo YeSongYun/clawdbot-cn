@@ -1,6 +1,6 @@
 {
   "name": "clawdbot-cn",
-  "version": "2026.1.27",
+  "version": "2026.1.28",
   "description": "Clawdbot 中文版 - AI 聊天机器人框架，支持多平台（Telegram、Discord、WhatsApp 等）",
   "type": "module",
   "main": "dist/index.js",
@@ -16,6 +16,7 @@
   },
   "files": [
     "locales/**",
+    "dist/i18n/**",
     "dist/acp/**",
     "dist/agents/**",
     "dist/auto-reply/**",
