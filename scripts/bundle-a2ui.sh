@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
+# Note: -u removed to avoid NODE_PATH unbound variable error in rolldown shim
 
 on_error() {
   echo "A2UI bundling failed. Re-run with: pnpm canvas:a2ui:bundle" >&2
