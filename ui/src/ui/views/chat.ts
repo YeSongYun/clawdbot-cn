@@ -4,6 +4,7 @@ import type { SessionsListResult } from "../types";
 import type { ChatAttachment, ChatQueueItem } from "../ui-types";
 import type { ChatItem, MessageGroup } from "../types/chat-types";
 import { icons } from "../icons";
+import { t } from "../../i18n/index.js";
 import {
   normalizeMessage,
   normalizeRoleForGrouping,
@@ -78,7 +79,7 @@ function renderCompactionIndicator(status: CompactionIndicatorStatus | null | un
   if (status.active) {
     return html`
       <div class="callout info compaction-indicator compaction-indicator--active">
-        ${icons.loader} Compacting context...
+        ${icons.loader} ${t("chat.compacting", "Compacting context...")}
       </div>
     `;
   }
@@ -89,7 +90,7 @@ function renderCompactionIndicator(status: CompactionIndicatorStatus | null | un
     if (elapsed < COMPACTION_TOAST_DURATION_MS) {
       return html`
         <div class="callout success compaction-indicator compaction-indicator--complete">
-          ${icons.check} Context compacted
+          ${icons.check} ${t("chat.compacted", "Context compacted")}
         </div>
       `;
     }
@@ -191,9 +192,9 @@ export function renderChat(props: ChatProps) {
   const hasAttachments = (props.attachments?.length ?? 0) > 0;
   const composePlaceholder = props.connected
     ? hasAttachments
-      ? "Add a message or paste more images..."
-      : "Message (↩ to send, Shift+↩ for line breaks, paste images)"
-    : "Connect to the gateway to start chatting…";
+      ? t("chat.placeholder.hasAttachments", "Add a message or paste more images...")
+      : t("chat.placeholder", "Message (↩ to send, Shift+↩ for line breaks, paste images)")
+    : t("chat.placeholder.disconnected", "Connect to the gateway to start chatting…");
 
   const splitRatio = props.splitRatio ?? 0.6;
   const sidebarOpen = Boolean(props.sidebarOpen && props.onCloseSidebar);
@@ -204,7 +205,7 @@ export function renderChat(props: ChatProps) {
       aria-live="polite"
       @scroll=${props.onChatScroll}
     >
-      ${props.loading ? html`<div class="muted">Loading chat…</div>` : nothing}
+      ${props.loading ? html`<div class="muted">${t("chat.loadingChat", "Loading chat…")}</div>` : nothing}
       ${repeat(buildChatItems(props), (item) => item.key, (item) => {
         if (item.kind === "reading-indicator") {
           return renderReadingIndicatorGroup(assistantIdentity);
@@ -294,7 +295,7 @@ export function renderChat(props: ChatProps) {
       ${props.queue.length
         ? html`
             <div class="chat-queue" role="status" aria-live="polite">
-              <div class="chat-queue__title">Queued (${props.queue.length})</div>
+              <div class="chat-queue__title">${t("chat.queued", "Queued")} (${props.queue.length})</div>
               <div class="chat-queue__list">
                 ${props.queue.map(
                   (item) => html`
@@ -325,7 +326,7 @@ export function renderChat(props: ChatProps) {
         ${renderAttachmentPreview(props)}
         <div class="chat-compose__row">
           <label class="field chat-compose__field">
-            <span>Message</span>
+            <span>${t("chat.message", "Message")}</span>
             <textarea
               .value=${props.draft}
               ?disabled=${!props.connected}
@@ -349,14 +350,14 @@ export function renderChat(props: ChatProps) {
               ?disabled=${!props.connected || (!canAbort && props.sending)}
               @click=${canAbort ? props.onAbort : props.onNewSession}
             >
-              ${canAbort ? "Stop" : "New session"}
+              ${canAbort ? t("chat.stop", "Stop") : t("chat.newSession", "New session")}
             </button>
             <button
               class="btn primary"
               ?disabled=${!props.connected}
               @click=${props.onSend}
             >
-              ${isBusy ? "Queue" : "Send"}<kbd class="btn-kbd">↵</kbd>
+              ${isBusy ? t("chat.queue", "Queue") : t("chat.send", "Send")}<kbd class="btn-kbd">↵</kbd>
             </button>
           </div>
         </div>

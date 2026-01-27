@@ -4,7 +4,7 @@ import type { GatewayBrowserClient, GatewayHelloOk } from "./gateway";
 import type { AppViewState } from "./app-view-state";
 import { parseAgentSessionKey } from "../../../src/routing/session-key.js";
 import {
-  TAB_GROUPS,
+  getTabGroups,
   iconForTab,
   pathForTab,
   subtitleForTab,
@@ -12,6 +12,7 @@ import {
   type Tab,
 } from "./navigation";
 import { icons } from "./icons";
+import { t } from "../i18n/index.js";
 import type { UiSettings } from "./storage";
 import type { ThemeMode } from "./theme";
 import type { ThemeTransitionContext } from "./theme-transition";
@@ -140,14 +141,14 @@ export function renderApp(state: AppViewState) {
         <div class="topbar-status">
           <div class="pill">
             <span class="statusDot ${state.connected ? "ok" : ""}"></span>
-            <span>Health</span>
-            <span class="mono">${state.connected ? "OK" : "Offline"}</span>
+            <span>${t("common.health", "Health")}</span>
+            <span class="mono">${state.connected ? t("common.ok", "OK") : t("common.offline", "Offline")}</span>
           </div>
           ${renderThemeToggle(state)}
         </div>
       </header>
       <aside class="nav ${state.settings.navCollapsed ? "nav--collapsed" : ""}">
-        ${TAB_GROUPS.map((group) => {
+        ${getTabGroups().map((group) => {
           const isGroupCollapsed = state.settings.navGroupsCollapsed[group.label] ?? false;
           const hasActiveTab = group.tabs.some((tab) => tab === state.tab);
           return html`

@@ -8,6 +8,7 @@ import {
   schemaType,
   type JsonSchema,
 } from "./config-form";
+import { t } from "../../i18n/index.js";
 
 type ChannelConfigFormProps = {
   channelId: string;
@@ -104,7 +105,7 @@ export function renderChannelConfigSection(params: {
   return html`
     <div style="margin-top: 16px;">
       ${props.configSchemaLoading
-        ? html`<div class="muted">Loading config schema…</div>`
+        ? html`<div class="muted">${t("config.loadingSchema", "Loading config schema…")}</div>`
         : renderChannelConfigForm({
             channelId,
             configValue: props.configForm,
@@ -119,14 +120,14 @@ export function renderChannelConfigSection(params: {
           ?disabled=${disabled || !props.configFormDirty}
           @click=${() => props.onConfigSave()}
         >
-          ${props.configSaving ? "Saving…" : "Save"}
+          ${props.configSaving ? t("config.saving", "Saving…") : t("config.save", "Save")}
         </button>
         <button
           class="btn"
           ?disabled=${disabled}
           @click=${() => props.onConfigReload()}
         >
-          Reload
+          ${t("config.reload", "Reload")}
         </button>
       </div>
     </div>

@@ -170,10 +170,11 @@ interface ControlUiInjectionOpts {
   basePath: string;
   assistantName?: string;
   assistantAvatar?: string;
+  locale?: string;
 }
 
 function injectControlUiConfig(html: string, opts: ControlUiInjectionOpts): string {
-  const { basePath, assistantName, assistantAvatar } = opts;
+  const { basePath, assistantName, assistantAvatar, locale } = opts;
   const script =
     `<script>` +
     `window.__CLAWDBOT_CONTROL_UI_BASE_PATH__=${JSON.stringify(basePath)};` +
@@ -183,6 +184,7 @@ function injectControlUiConfig(html: string, opts: ControlUiInjectionOpts): stri
     `window.__CLAWDBOT_ASSISTANT_AVATAR__=${JSON.stringify(
       assistantAvatar ?? DEFAULT_ASSISTANT_IDENTITY.avatar,
     )};` +
+    `window.__CLAWDBOT_LOCALE__=${JSON.stringify(locale ?? "zh-CN")};` +
     `</script>`;
   // Check if already injected
   if (html.includes("__CLAWDBOT_ASSISTANT_NAME__")) return html;
@@ -214,6 +216,10 @@ function serveIndexHtml(res: ServerResponse, indexPath: string, opts: ServeIndex
       agentId: resolvedAgentId,
       basePath,
     }) ?? identity.avatar;
+  const locale =
+    ((config as Record<string, unknown>)?.locale as string | undefined) ??
+    process.env.CLAWDBOT_LOCALE ??
+    "zh-CN";
   res.setHeader("Content-Type", "text/html; charset=utf-8");
   res.setHeader("Cache-Control", "no-cache");
   const raw = fs.readFileSync(indexPath, "utf8");
@@ -222,8 +228,61 @@ function serveIndexHtml(res: ServerResponse, indexPath: string, opts: ServeIndex
       basePath,
       assistantName: identity.name,
       assistantAvatar: avatarValue,
+      locale,
     }),
   );
+}
+
+function resolveLocalesRoot(): string | null {
+  const here = path.dirname(fileURLToPath(import.meta.url));
+  const candidates = [
+    // Running from dist: dist/gateway/control-ui.js -> locales
+    path.resolve(here, "../../locales"),
+    // Running from source: src/gateway/control-ui.ts -> locales
+    path.resolve(here, "../../locales"),
+    // Fallback to cwd
+    path.resolve(process.cwd(), "locales"),
+  ];
+  for (const dir of candidates) {
+    if (fs.existsSync(dir)) return dir;
+  }
+  return null;
+}
+
+function handleLocalesRequest(
+  req: IncomingMessage,
+  res: ServerResponse,
+  pathname: string,
+  basePath: string,
+): boolean {
+  const prefix = basePath ? `${basePath}/locales/` : "/locales/";
+  if (!pathname.startsWith(prefix)) return false;
+
+  const relPath = pathname.slice(prefix.length);
+  if (!relPath || !isSafeRelativePath(relPath)) {
+    respondNotFound(res);
+    return true;
+  }
+
+  const localesRoot = resolveLocalesRoot();
+  if (!localesRoot) {
+    respondNotFound(res);
+    return true;
+  }
+
+  const filePath = path.join(localesRoot, relPath);
+  if (!filePath.startsWith(localesRoot)) {
+    respondNotFound(res);
+    return true;
+  }
+
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+    serveFile(res, filePath);
+    return true;
+  }
+
+  respondNotFound(res);
+  return true;
 }
 
 function isSafeRelativePath(relPath: string) {
@@ -268,6 +327,9 @@ export function handleControlUiHttpRequest(
     }
     if (!pathname.startsWith(`${basePath}/`)) return false;
   }
+
+  // Serve locale files before resolving UI root
+  if (handleLocalesRequest(req, res, pathname, basePath)) return true;
 
   const root = resolveControlUiRoot();
   if (!root) {
