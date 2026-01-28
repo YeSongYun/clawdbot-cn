@@ -5,6 +5,7 @@ import { getChannelPlugin } from "../channels/plugins/index.js";
 import { loadConfig } from "../config/config.js";
 import { danger } from "../globals.js";
 import { resolveMessageChannelSelection } from "../infra/outbound/channel-selection.js";
+import { t } from "../i18n/index.js";
 import { defaultRuntime } from "../runtime.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
@@ -37,7 +38,7 @@ export function registerDirectoryCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink(
+        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink(
           "/cli/directory",
           "docs.clawd.bot/cli/directory",
         )}\n`,

@@ -1,6 +1,7 @@
 import type { Command } from "commander";
 
 import { docsSearchCommand } from "../commands/docs.js";
+import { t } from "../i18n/index.js";
 import { defaultRuntime } from "../runtime.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
@@ -13,7 +14,7 @@ export function registerDocsCli(program: Command) {
     .argument("[query...]", "Search query")
     .addHelpText(
       "after",
-      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/docs", "docs.clawd.bot/cli/docs")}\n`,
+      () => `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/docs", "docs.clawd.bot/cli/docs")}\n`,
     )
     .action(async (queryParts: string[]) => {
       await runCommandWithRuntime(defaultRuntime, async () => {

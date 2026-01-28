@@ -3,6 +3,7 @@ import type { Command } from "commander";
 
 import { readConfigFileSnapshot, writeConfigFile } from "../config/config.js";
 import { danger, info } from "../globals.js";
+import { t } from "../i18n/index.js";
 import { defaultRuntime } from "../runtime.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { formatCliCommand } from "./command-format.js";
@@ -181,11 +182,11 @@ async function loadValidConfig() {
 export function registerConfigCli(program: Command) {
   const cmd = program
     .command("config")
-    .description("Config helpers (get/set/unset). Run without subcommand for the wizard.")
+    .description(t("cli", "cmd.config", "Config helpers (get/set/unset). Run without subcommand for the wizard."))
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/config", "docs.clawd.bot/cli/config")}\n`,
+        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/config", "docs.clawd.bot/cli/config")}\n`,
     )
     .option(
       "--section <section>",

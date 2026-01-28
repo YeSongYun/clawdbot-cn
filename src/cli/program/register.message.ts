@@ -1,4 +1,5 @@
 import type { Command } from "commander";
+import { t } from "../../i18n/index.js";
 import { formatDocsLink } from "../../terminal/links.js";
 import { theme } from "../../terminal/theme.js";
 import { formatHelpExamples } from "../help-format.js";
@@ -24,12 +25,12 @@ import { registerMessageBroadcastCommand } from "./message/register.broadcast.js
 export function registerMessageCommands(program: Command, ctx: ProgramContext) {
   const message = program
     .command("message")
-    .description("Send messages and channel actions")
+    .description(t("cli", "cmd.message", "Send messages and channel actions"))
     .addHelpText(
       "after",
       () =>
         `
-${theme.heading("Examples:")}
+${theme.heading(t("cli", "help.examples", "Examples:"))}
 ${formatHelpExamples([
   ['clawdbot message send --target +15555550123 --message "Hi"', "Send a text message."],
   [
@@ -46,7 +47,7 @@ ${formatHelpExamples([
   ],
 ])}
 
-${theme.muted("Docs:")} ${formatDocsLink("/cli/message", "docs.clawd.bot/cli/message")}`,
+${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/message", "docs.clawd.bot/cli/message")}`,
     )
     .action(() => {
       message.help({ error: true });

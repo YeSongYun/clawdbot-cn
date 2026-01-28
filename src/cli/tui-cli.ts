@@ -1,4 +1,5 @@
 import type { Command } from "commander";
+import { t } from "../i18n/index.js";
 import { defaultRuntime } from "../runtime.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
@@ -20,7 +21,7 @@ export function registerTuiCli(program: Command) {
     .option("--history-limit <n>", "History entries to load", "200")
     .addHelpText(
       "after",
-      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/tui", "docs.clawd.bot/cli/tui")}\n`,
+      () => `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/tui", "docs.clawd.bot/cli/tui")}\n`,
     )
     .action(async (opts) => {
       try {

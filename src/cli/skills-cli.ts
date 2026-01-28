@@ -6,6 +6,7 @@ import {
   type SkillStatusReport,
 } from "../agents/skills-status.js";
 import { loadConfig } from "../config/config.js";
+import { t } from "../i18n/index.js";
 import { defaultRuntime } from "../runtime.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { renderTable } from "../terminal/table.js";
@@ -337,7 +338,7 @@ export function registerSkillsCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/skills", "docs.clawd.bot/cli/skills")}\n`,
+        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/skills", "docs.clawd.bot/cli/skills")}\n`,
     );
 
   skills

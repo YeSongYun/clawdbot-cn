@@ -10,6 +10,7 @@ import {
   channelsStatusCommand,
 } from "../commands/channels.js";
 import { danger } from "../globals.js";
+import { t } from "../i18n/index.js";
 import { defaultRuntime } from "../runtime.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
@@ -74,7 +75,7 @@ export function registerChannelsCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink(
+        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink(
           "/cli/channels",
           "docs.clawd.bot/cli/channels",
         )}\n`,

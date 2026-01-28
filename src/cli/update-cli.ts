@@ -36,6 +36,7 @@ import {
   resolveEffectiveUpdateChannel,
 } from "../infra/update-channels.js";
 import { trimLogTail } from "../infra/restart-sentinel.js";
+import { t } from "../i18n/index.js";
 import { defaultRuntime } from "../runtime.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { formatCliCommand } from "./command-format.js";
@@ -1128,7 +1129,7 @@ ${theme.heading("Non-interactive:")}
   - Use --yes to accept downgrade prompts
   - Combine with --channel/--tag/--restart/--json/--timeout as needed
 
-${theme.heading("Examples:")}
+${theme.heading(t("cli", "help.examples", "Examples:"))}
 ${fmtExamples}
 
 ${theme.heading("Notes:")}
@@ -1137,7 +1138,7 @@ ${theme.heading("Notes:")}
   - Downgrades require confirmation (can break configuration)
   - Skips update if the working directory has uncommitted changes
 
-${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.clawd.bot/cli/update")}`;
+${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/update", "docs.clawd.bot/cli/update")}`;
     })
     .action(async (opts) => {
       try {
@@ -1161,7 +1162,7 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.clawd.bot/cli/upda
     .option("--timeout <seconds>", "Timeout for each update step in seconds (default: 1200)")
     .addHelpText(
       "after",
-      `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.clawd.bot/cli/update")}\n`,
+      `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/update", "docs.clawd.bot/cli/update")}\n`,
     )
     .action(async (opts) => {
       try {
@@ -1180,7 +1181,7 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/update", "docs.clawd.bot/cli/upda
     .addHelpText(
       "after",
       () =>
-        `\n${theme.heading("Examples:")}\n${formatHelpExamples([
+        `\n${theme.heading(t("cli", "help.examples", "Examples:"))}\n${formatHelpExamples([
           ["clawdbot update status", "Show channel + version status."],
           ["clawdbot update status --json", "JSON output."],
           ["clawdbot update status --timeout 10", "Custom timeout."],

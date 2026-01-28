@@ -26,6 +26,7 @@ import {
   modelsSetImageCommand,
   modelsStatusCommand,
 } from "../commands/models.js";
+import { t } from "../i18n/index.js";
 import { defaultRuntime } from "../runtime.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
@@ -44,7 +45,7 @@ export function registerModelsCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/models", "docs.clawd.bot/cli/models")}\n`,
+        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/models", "docs.clawd.bot/cli/models")}\n`,
     );
 
   models

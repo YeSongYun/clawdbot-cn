@@ -2,6 +2,7 @@ import { setTimeout as delay } from "node:timers/promises";
 import type { Command } from "commander";
 import { buildGatewayConnectionDetails } from "../gateway/call.js";
 import { parseLogLine } from "../logging/parse-log-line.js";
+import { t } from "../i18n/index.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { clearActiveProgressLine } from "../terminal/progress-line.js";
 import { createSafeStreamWriter } from "../terminal/stream-writer.js";
@@ -180,7 +181,7 @@ export function registerLogsCli(program: Command) {
     .option("--no-color", "Disable ANSI colors")
     .addHelpText(
       "after",
-      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/logs", "docs.clawd.bot/cli/logs")}\n`,
+      () => `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/logs", "docs.clawd.bot/cli/logs")}\n`,
     );
 
   addGatewayClientOptions(logs);

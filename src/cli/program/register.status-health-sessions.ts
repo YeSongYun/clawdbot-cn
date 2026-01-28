@@ -3,6 +3,7 @@ import { healthCommand } from "../../commands/health.js";
 import { sessionsCommand } from "../../commands/sessions.js";
 import { statusCommand } from "../../commands/status.js";
 import { setVerbose } from "../../globals.js";
+import { t } from "../../i18n/index.js";
 import { defaultRuntime } from "../../runtime.js";
 import { formatDocsLink } from "../../terminal/links.js";
 import { theme } from "../../terminal/theme.js";
@@ -27,7 +28,7 @@ function parseTimeoutMs(timeout: unknown): number | null | undefined {
 export function registerStatusHealthSessionsCommands(program: Command) {
   program
     .command("status")
-    .description("Show channel health and recent session recipients")
+    .description(t("cli", "cmd.status", "Show channel health and recent session recipients"))
     .option("--json", "Output JSON instead of text", false)
     .option("--all", "Full diagnosis (read-only, pasteable)", false)
     .option("--usage", "Show model provider usage/quota snapshots", false)
@@ -38,7 +39,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.heading("Examples:")}\n${formatHelpExamples([
+        `\n${theme.heading(t("cli", "help.examples", "Examples:"))}\n${formatHelpExamples([
           ["clawdbot status", "Show channel health + session summary."],
           ["clawdbot status --all", "Full diagnosis (read-only)."],
           ["clawdbot status --json", "Machine-readable output."],
@@ -53,7 +54,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/status", "docs.clawd.bot/cli/status")}\n`,
+        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/status", "docs.clawd.bot/cli/status")}\n`,
     )
     .action(async (opts) => {
       const verbose = resolveVerbose(opts);
@@ -79,7 +80,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
 
   program
     .command("health")
-    .description("Fetch health from the running gateway")
+    .description(t("cli", "cmd.health", "Fetch health from the running gateway"))
     .option("--json", "Output JSON instead of text", false)
     .option("--timeout <ms>", "Connection timeout in milliseconds", "10000")
     .option("--verbose", "Verbose logging", false)
@@ -87,7 +88,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/health", "docs.clawd.bot/cli/health")}\n`,
+        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/health", "docs.clawd.bot/cli/health")}\n`,
     )
     .action(async (opts) => {
       const verbose = resolveVerbose(opts);
@@ -110,7 +111,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
 
   program
     .command("sessions")
-    .description("List stored conversation sessions")
+    .description(t("cli", "cmd.sessions", "List stored conversation sessions"))
     .option("--json", "Output as JSON", false)
     .option("--verbose", "Verbose logging", false)
     .option("--store <path>", "Path to session store (default: resolved from config)")
@@ -118,7 +119,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.heading("Examples:")}\n${formatHelpExamples([
+        `\n${theme.heading(t("cli", "help.examples", "Examples:"))}\n${formatHelpExamples([
           ["clawdbot sessions", "List all sessions."],
           ["clawdbot sessions --active 120", "Only last 2 hours."],
           ["clawdbot sessions --json", "Machine-readable output."],
@@ -130,7 +131,7 @@ export function registerStatusHealthSessionsCommands(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/sessions", "docs.clawd.bot/cli/sessions")}\n`,
+        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/sessions", "docs.clawd.bot/cli/sessions")}\n`,
     )
     .action(async (opts) => {
       setVerbose(Boolean(opts.verbose));

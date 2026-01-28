@@ -4,6 +4,7 @@ import { formatHealthChannelLines, type HealthSummary } from "../../commands/hea
 import { discoverGatewayBeacons } from "../../infra/bonjour-discovery.js";
 import type { CostUsageSummary } from "../../infra/session-cost-usage.js";
 import { WIDE_AREA_DISCOVERY_DOMAIN } from "../../infra/widearea-dns.js";
+import { t } from "../../i18n/index.js";
 import { defaultRuntime } from "../../runtime.js";
 import { formatDocsLink } from "../../terminal/links.js";
 import { colorize, isRich, theme } from "../../terminal/theme.js";
@@ -103,7 +104,7 @@ export function registerGatewayCli(program: Command) {
       .addHelpText(
         "after",
         () =>
-          `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/gateway", "docs.clawd.bot/cli/gateway")}\n`,
+          `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/gateway", "docs.clawd.bot/cli/gateway")}\n`,
       ),
   );
 

@@ -1,4 +1,5 @@
 import type { Command } from "commander";
+import { t } from "../../i18n/index.js";
 import { formatDocsLink } from "../../terminal/links.js";
 import { theme } from "../../terminal/theme.js";
 import { loadNodeHostConfig } from "../../node-host/config.js";
@@ -23,7 +24,7 @@ export function registerNodeCli(program: Command) {
     .description("Run a headless node host (system.run/system.which)")
     .addHelpText(
       "after",
-      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/node", "docs.clawd.bot/cli/node")}\n`,
+      () => `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/node", "docs.clawd.bot/cli/node")}\n`,
     );
 
   node

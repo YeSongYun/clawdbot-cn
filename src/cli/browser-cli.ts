@@ -1,6 +1,7 @@
 import type { Command } from "commander";
 
 import { danger } from "../globals.js";
+import { t } from "../i18n/index.js";
 import { defaultRuntime } from "../runtime.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { theme } from "../terminal/theme.js";
@@ -20,16 +21,16 @@ import { addGatewayClientOptions } from "./gateway-rpc.js";
 export function registerBrowserCli(program: Command) {
   const browser = program
     .command("browser")
-    .description("Manage clawd's dedicated browser (Chrome/Chromium)")
+    .description(t("cli", "cmd.browser", "Manage clawd's dedicated browser (Chrome/Chromium)"))
     .option("--browser-profile <name>", "Browser profile name (default from config)")
     .option("--json", "Output machine-readable JSON", false)
     .addHelpText(
       "after",
       () =>
-        `\n${theme.heading("Examples:")}\n${formatHelpExamples(
+        `\n${theme.heading(t("cli", "help.examples", "Examples:"))}\n${formatHelpExamples(
           [...browserCoreExamples, ...browserActionExamples].map((cmd) => [cmd, ""]),
           true,
-        )}\n\n${theme.muted("Docs:")} ${formatDocsLink(
+        )}\n\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink(
           "/cli/browser",
           "docs.clawd.bot/cli/browser",
         )}\n`,

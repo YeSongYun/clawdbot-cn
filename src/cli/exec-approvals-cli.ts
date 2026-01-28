@@ -8,6 +8,7 @@ import {
   type ExecApprovalsAgent,
   type ExecApprovalsFile,
 } from "../infra/exec-approvals.js";
+import { t } from "../i18n/index.js";
 import { defaultRuntime } from "../runtime.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { isRich, theme } from "../terminal/theme.js";
@@ -233,7 +234,7 @@ export function registerExecApprovalsCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/approvals", "docs.clawd.bot/cli/approvals")}\n`,
+        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/approvals", "docs.clawd.bot/cli/approvals")}\n`,
     );
 
   const getCmd = approvals
@@ -325,7 +326,7 @@ export function registerExecApprovalsCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.heading("Examples:")}\n${formatExample(
+        `\n${theme.heading(t("cli", "help.examples", "Examples:"))}\n${formatExample(
           'clawdbot approvals allowlist add "~/Projects/**/bin/rg"',
           "Allowlist a local binary pattern for the main agent.",
         )}\n${formatExample(
@@ -337,7 +338,7 @@ export function registerExecApprovalsCli(program: Command) {
         )}\n${formatExample(
           'clawdbot approvals allowlist remove "~/Projects/**/bin/rg"',
           "Remove an allowlist pattern.",
-        )}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/approvals", "docs.clawd.bot/cli/approvals")}\n`,
+        )}\n\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/approvals", "docs.clawd.bot/cli/approvals")}\n`,
     );
 
   const allowlistAdd = allowlist

@@ -1,4 +1,5 @@
 import type { Command } from "commander";
+import { t } from "../../i18n/index.js";
 import { formatDocsLink } from "../../terminal/links.js";
 import { theme } from "../../terminal/theme.js";
 import {
@@ -15,7 +16,7 @@ export function registerCronCli(program: Command) {
     .description("Manage cron jobs (via Gateway)")
     .addHelpText(
       "after",
-      () => `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/cron", "docs.clawd.bot/cli/cron")}\n`,
+      () => `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/cron", "docs.clawd.bot/cli/cron")}\n`,
     );
 
   registerCronStatusCommand(cron);

@@ -1,4 +1,5 @@
 import type { Command } from "commander";
+import { t } from "../../i18n/index.js";
 import { formatDocsLink } from "../../terminal/links.js";
 import { theme } from "../../terminal/theme.js";
 import { registerNodesCameraCommands } from "./register.camera.js";
@@ -17,7 +18,7 @@ export function registerNodesCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/nodes", "docs.clawd.bot/cli/nodes")}\n`,
+        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/nodes", "docs.clawd.bot/cli/nodes")}\n`,
     );
 
   registerNodesStatusCommands(nodes);

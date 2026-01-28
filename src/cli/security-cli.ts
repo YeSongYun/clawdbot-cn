@@ -1,6 +1,7 @@
 import type { Command } from "commander";
 
 import { loadConfig } from "../config/config.js";
+import { t } from "../i18n/index.js";
 import { defaultRuntime } from "../runtime.js";
 import { runSecurityAudit } from "../security/audit.js";
 import { fixSecurityFootguns } from "../security/fix.js";
@@ -34,7 +35,7 @@ export function registerSecurityCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/security", "docs.clawd.bot/cli/security")}\n`,
+        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/security", "docs.clawd.bot/cli/security")}\n`,
     );
 
   security

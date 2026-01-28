@@ -8,6 +8,7 @@ import {
   listChannelPairingRequests,
   type PairingChannel,
 } from "../pairing/pairing-store.js";
+import { t } from "../i18n/index.js";
 import { defaultRuntime } from "../runtime.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { renderTable } from "../terminal/table.js";
@@ -53,7 +54,7 @@ export function registerPairingCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/pairing", "docs.clawd.bot/cli/pairing")}\n`,
+        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/pairing", "docs.clawd.bot/cli/pairing")}\n`,
     );
 
   pairing

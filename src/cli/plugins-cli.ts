@@ -11,6 +11,7 @@ import { applyExclusiveSlotSelection } from "../plugins/slots.js";
 import type { PluginRecord } from "../plugins/registry.js";
 import { buildPluginStatusReport } from "../plugins/status.js";
 import { updateNpmInstalledPlugins } from "../plugins/update.js";
+import { t } from "../i18n/index.js";
 import { defaultRuntime } from "../runtime.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { renderTable } from "../terminal/table.js";
@@ -98,7 +99,7 @@ export function registerPluginsCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/plugins", "docs.clawd.bot/cli/plugins")}\n`,
+        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/plugins", "docs.clawd.bot/cli/plugins")}\n`,
     );
 
   plugins
@@ -523,7 +524,7 @@ export function registerPluginsCli(program: Command) {
       }
       const docs = formatDocsLink("/plugin", "docs.clawd.bot/plugin");
       lines.push("");
-      lines.push(`${theme.muted("Docs:")} ${docs}`);
+      lines.push(`${theme.muted(t("cli", "help.docs", "Docs:"))} ${docs}`);
       defaultRuntime.log(lines.join("\n"));
     });
 }
