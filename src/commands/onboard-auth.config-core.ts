@@ -10,6 +10,13 @@ import {
   VENICE_DEFAULT_MODEL_REF,
   VENICE_MODEL_CATALOG,
 } from "../agents/venice-models.js";
+import {
+  buildDmxapiModelDefinition,
+  DMXAPI_DEFAULT_BASE_URL,
+  DMXAPI_DEFAULT_MODEL_ID,
+  DMXAPI_DEFAULT_MODEL_REF,
+  DMXAPI_MODEL_CATALOG,
+} from "../agents/dmxapi-models.js";
 import type { ClawdbotConfig } from "../config/config.js";
 import {
   OPENROUTER_DEFAULT_MODEL_REF,
@@ -405,6 +412,87 @@ export function applyVeniceConfig(cfg: ClawdbotConfig): ClawdbotConfig {
               }
             : undefined),
           primary: VENICE_DEFAULT_MODEL_REF,
+        },
+      },
+    },
+  };
+}
+
+/**
+ * Apply DMXAPI provider configuration without changing the default model.
+ * Registers DMXAPI models and sets up the provider, but preserves existing model selection.
+ */
+export function applyDmxapiProviderConfig(
+  cfg: ClawdbotConfig,
+  baseUrl: string = DMXAPI_DEFAULT_BASE_URL,
+): ClawdbotConfig {
+  const models = { ...cfg.agents?.defaults?.models };
+  models[DMXAPI_DEFAULT_MODEL_REF] = {
+    ...models[DMXAPI_DEFAULT_MODEL_REF],
+    alias: models[DMXAPI_DEFAULT_MODEL_REF]?.alias ?? "Claude Opus 4.5 CC",
+  };
+
+  const providers = { ...cfg.models?.providers };
+  const existingProvider = providers.dmxapi;
+  const existingModels = Array.isArray(existingProvider?.models) ? existingProvider.models : [];
+  const dmxapiModels = DMXAPI_MODEL_CATALOG.map(buildDmxapiModelDefinition);
+  const mergedModels = [
+    ...existingModels,
+    ...dmxapiModels.filter((model) => !existingModels.some((existing) => existing.id === model.id)),
+  ];
+  const { apiKey: existingApiKey, ...existingProviderRest } = (existingProvider ?? {}) as Record<
+    string,
+    unknown
+  > as { apiKey?: string };
+  const resolvedApiKey = typeof existingApiKey === "string" ? existingApiKey : undefined;
+  const normalizedApiKey = resolvedApiKey?.trim();
+  providers.dmxapi = {
+    ...existingProviderRest,
+    baseUrl,
+    api: "anthropic-messages",
+    ...(normalizedApiKey ? { apiKey: normalizedApiKey } : {}),
+    models: mergedModels.length > 0 ? mergedModels : dmxapiModels,
+  };
+
+  return {
+    ...cfg,
+    agents: {
+      ...cfg.agents,
+      defaults: {
+        ...cfg.agents?.defaults,
+        models,
+      },
+    },
+    models: {
+      mode: cfg.models?.mode ?? "merge",
+      providers,
+    },
+  };
+}
+
+/**
+ * Apply DMXAPI provider configuration AND set DMXAPI as the default model.
+ * Use this when DMXAPI is the primary provider choice during onboarding.
+ */
+export function applyDmxapiConfig(
+  cfg: ClawdbotConfig,
+  baseUrl: string = DMXAPI_DEFAULT_BASE_URL,
+): ClawdbotConfig {
+  const next = applyDmxapiProviderConfig(cfg, baseUrl);
+  const existingModel = next.agents?.defaults?.model;
+  return {
+    ...next,
+    agents: {
+      ...next.agents,
+      defaults: {
+        ...next.agents?.defaults,
+        model: {
+          ...(existingModel && "fallbacks" in (existingModel as Record<string, unknown>)
+            ? {
+                fallbacks: (existingModel as { fallbacks?: string[] }).fallbacks,
+              }
+            : undefined),
+          primary: DMXAPI_DEFAULT_MODEL_REF,
         },
       },
     },

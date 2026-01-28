@@ -112,9 +112,23 @@ export async function setVeniceApiKey(key: string, agentDir?: string) {
   });
 }
 
+export async function setDmxapiApiKey(key: string, agentDir?: string) {
+  // Write to resolved agent dir so gateway finds credentials on startup.
+  upsertAuthProfile({
+    profileId: "dmxapi:default",
+    credential: {
+      type: "api_key",
+      provider: "dmxapi",
+      key,
+    },
+    agentDir: resolveAuthAgentDir(agentDir),
+  });
+}
+
 export const ZAI_DEFAULT_MODEL_REF = "zai/glm-4.7";
 export const OPENROUTER_DEFAULT_MODEL_REF = "openrouter/auto";
 export const VERCEL_AI_GATEWAY_DEFAULT_MODEL_REF = "vercel-ai-gateway/anthropic/claude-opus-4.5";
+export const DMXAPI_DEFAULT_MODEL_REF = "dmxapi/claude-opus-4-5-20251101-cc";
 
 export async function setZaiApiKey(key: string, agentDir?: string) {
   // Write to resolved agent dir so gateway finds credentials on startup.

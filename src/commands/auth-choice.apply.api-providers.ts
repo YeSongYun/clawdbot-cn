@@ -13,6 +13,8 @@ import {
 } from "./google-gemini-model-default.js";
 import {
   applyAuthProfileConfig,
+  applyDmxapiConfig,
+  applyDmxapiProviderConfig,
   applyKimiCodeConfig,
   applyKimiCodeProviderConfig,
   applyMoonshotConfig,
@@ -28,12 +30,15 @@ import {
   applyVercelAiGatewayConfig,
   applyVercelAiGatewayProviderConfig,
   applyZaiConfig,
+  DMXAPI_DEFAULT_BASE_URL,
+  DMXAPI_DEFAULT_MODEL_REF,
   KIMI_CODE_MODEL_REF,
   MOONSHOT_DEFAULT_MODEL_REF,
   OPENROUTER_DEFAULT_MODEL_REF,
   SYNTHETIC_DEFAULT_MODEL_REF,
   VENICE_DEFAULT_MODEL_REF,
   VERCEL_AI_GATEWAY_DEFAULT_MODEL_REF,
+  setDmxapiApiKey,
   setGeminiApiKey,
   setKimiCodeApiKey,
   setMoonshotApiKey,
@@ -83,6 +88,8 @@ export async function applyAuthChoiceApiProviders(
       authChoice = "synthetic-api-key";
     } else if (params.opts.tokenProvider === "venice") {
       authChoice = "venice-api-key";
+    } else if (params.opts.tokenProvider === "dmxapi") {
+      authChoice = "dmxapi-api-key";
     } else if (params.opts.tokenProvider === "opencode") {
       authChoice = "opencode-zen";
     }
@@ -513,6 +520,80 @@ export async function applyAuthChoiceApiProviders(
         applyDefaultConfig: applyVeniceConfig,
         applyProviderConfig: applyVeniceProviderConfig,
         noteDefault: VENICE_DEFAULT_MODEL_REF,
+        noteAgentModel,
+        prompter: params.prompter,
+      });
+      nextConfig = applied.config;
+      agentModelOverride = applied.agentModelOverride ?? agentModelOverride;
+    }
+    return { config: nextConfig, agentModelOverride };
+  }
+
+  if (authChoice === "dmxapi-api-key") {
+    let hasCredential = false;
+    let customBaseUrl = DMXAPI_DEFAULT_BASE_URL;
+
+    if (!hasCredential && params.opts?.token && params.opts?.tokenProvider === "dmxapi") {
+      await setDmxapiApiKey(normalizeApiKeyInput(params.opts.token), params.agentDir);
+      hasCredential = true;
+    }
+
+    if (!hasCredential) {
+      await params.prompter.note(
+        [
+          "DMXAPI 提供 Claude 模型的 API 访问服务。",
+          "获取 API Key: https://www.dmxapi.cn",
+          "使用 anthropic-messages API 格式。",
+        ].join("\n"),
+        "DMXAPI",
+      );
+    }
+
+    const envKey = resolveEnvApiKey("dmxapi");
+    if (envKey) {
+      const useExisting = await params.prompter.confirm({
+        message: `使用已有的 DMXAPI_API_KEY (${envKey.source}, ${formatApiKeyPreview(envKey.apiKey)})?`,
+        initialValue: true,
+      });
+      if (useExisting) {
+        await setDmxapiApiKey(envKey.apiKey, params.agentDir);
+        hasCredential = true;
+      }
+    }
+    if (!hasCredential) {
+      const key = await params.prompter.text({
+        message: "输入 DMXAPI API key",
+        validate: validateApiKeyInput,
+      });
+      await setDmxapiApiKey(normalizeApiKeyInput(String(key)), params.agentDir);
+    }
+
+    const useCustomBaseUrl = await params.prompter.confirm({
+      message: `使用自定义 Base URL? (默认: ${DMXAPI_DEFAULT_BASE_URL})`,
+      initialValue: false,
+    });
+    if (useCustomBaseUrl) {
+      const baseUrlInput = await params.prompter.text({
+        message: "输入自定义 Base URL",
+        initialValue: DMXAPI_DEFAULT_BASE_URL,
+        validate: (value) => (value?.trim() ? undefined : "必填"),
+      });
+      customBaseUrl = String(baseUrlInput).trim();
+    }
+
+    nextConfig = applyAuthProfileConfig(nextConfig, {
+      profileId: "dmxapi:default",
+      provider: "dmxapi",
+      mode: "api_key",
+    });
+    {
+      const applied = await applyDefaultModelChoice({
+        config: nextConfig,
+        setDefaultModel: params.setDefaultModel,
+        defaultModel: DMXAPI_DEFAULT_MODEL_REF,
+        applyDefaultConfig: (cfg) => applyDmxapiConfig(cfg, customBaseUrl),
+        applyProviderConfig: (cfg) => applyDmxapiProviderConfig(cfg, customBaseUrl),
+        noteDefault: DMXAPI_DEFAULT_MODEL_REF,
         noteAgentModel,
         prompter: params.prompter,
       });

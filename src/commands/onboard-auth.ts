@@ -4,7 +4,14 @@ export {
 } from "../agents/synthetic-models.js";
 export { VENICE_DEFAULT_MODEL_ID, VENICE_DEFAULT_MODEL_REF } from "../agents/venice-models.js";
 export {
+  DMXAPI_DEFAULT_MODEL_ID,
+  DMXAPI_DEFAULT_MODEL_REF,
+  DMXAPI_DEFAULT_BASE_URL,
+} from "../agents/dmxapi-models.js";
+export {
   applyAuthProfileConfig,
+  applyDmxapiConfig,
+  applyDmxapiProviderConfig,
   applyKimiCodeConfig,
   applyKimiCodeProviderConfig,
   applyMoonshotConfig,
@@ -33,8 +40,10 @@ export {
   applyOpencodeZenProviderConfig,
 } from "./onboard-auth.config-opencode.js";
 export {
+  DMXAPI_DEFAULT_MODEL_REF as DMXAPI_DEFAULT_MODEL_REF_CRED,
   OPENROUTER_DEFAULT_MODEL_REF,
   setAnthropicApiKey,
+  setDmxapiApiKey,
   setGeminiApiKey,
   setKimiCodeApiKey,
   setMinimaxApiKey,

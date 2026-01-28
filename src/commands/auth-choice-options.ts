@@ -20,6 +20,7 @@ export type AuthChoiceGroupId =
   | "minimax"
   | "synthetic"
   | "venice"
+  | "dmxapi"
   | "qwen";
 
 export type AuthChoiceGroup = {
@@ -35,6 +36,12 @@ const AUTH_CHOICE_GROUP_DEFS: {
   hint?: string;
   choices: AuthChoice[];
 }[] = [
+  {
+    value: "dmxapi",
+    label: "DMXAPI",
+    hint: "Claude 模型 (推荐)",
+    choices: ["dmxapi-api-key"],
+  },
   {
     value: "openai",
     label: "OpenAI",
@@ -122,6 +129,11 @@ export function buildAuthChoiceOptions(params: {
   void params.store;
   const options: AuthChoiceOption[] = [];
 
+  options.push({
+    value: "dmxapi-api-key",
+    label: "DMXAPI API key",
+    hint: "Claude 模型 (anthropic-messages API)",
+  });
   options.push({
     value: "token",
     label: "Anthropic token (paste setup-token)",
