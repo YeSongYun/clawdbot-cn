@@ -1,6 +1,6 @@
 import type { ModelDefinitionConfig } from "../config/types.js";
 
-export const DMXAPI_DEFAULT_BASE_URL = "https://www.dmxapi.cn/v1";
+export const DMXAPI_DEFAULT_BASE_URL = "https://www.dmxapi.cn";
 export const DMXAPI_DEFAULT_MODEL_ID = "claude-opus-4-5-20251101-cc";
 export const DMXAPI_DEFAULT_MODEL_REF = `dmxapi/${DMXAPI_DEFAULT_MODEL_ID}`;
 export const DMXAPI_DEFAULT_COST = {
