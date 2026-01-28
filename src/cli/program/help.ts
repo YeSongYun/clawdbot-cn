@@ -1,47 +1,88 @@
 import type { Command } from "commander";
+import { t } from "../../i18n/index.js";
 import { formatDocsLink } from "../../terminal/links.js";
 import { isRich, theme } from "../../terminal/theme.js";
 import { formatCliBannerLine, hasEmittedCliBanner } from "../banner.js";
 import type { ProgramContext } from "./context.js";
 
-const EXAMPLES = [
+const EXAMPLES = () =>
   [
-    "clawdbot channels login --verbose",
-    "Link personal WhatsApp Web and show QR + connection logs.",
-  ],
-  [
-    'clawdbot message send --target +15555550123 --message "Hi" --json',
-    "Send via your web session and print JSON result.",
-  ],
-  ["clawdbot gateway --port 18789", "Run the WebSocket Gateway locally."],
-  ["clawdbot --dev gateway", "Run a dev Gateway (isolated state/config) on ws://127.0.0.1:19001."],
-  ["clawdbot gateway --force", "Kill anything bound to the default gateway port, then start it."],
-  ["clawdbot gateway ...", "Gateway control via WebSocket."],
-  [
-    'clawdbot agent --to +15555550123 --message "Run summary" --deliver',
-    "Talk directly to the agent using the Gateway; optionally send the WhatsApp reply.",
-  ],
-  [
-    'clawdbot message send --channel telegram --target @mychat --message "Hi"',
-    "Send via your Telegram bot.",
-  ],
-] as const;
+    [
+      "clawdbot channels login --verbose",
+      t(
+        "cli",
+        "example.channelsLogin",
+        "Link personal WhatsApp Web and show QR + connection logs.",
+      ),
+    ],
+    [
+      'clawdbot message send --target +15555550123 --message "Hi" --json',
+      t("cli", "example.messageSend", "Send via your web session and print JSON result."),
+    ],
+    [
+      "clawdbot gateway --port 18789",
+      t("cli", "example.gatewayPort", "Run the WebSocket Gateway locally."),
+    ],
+    [
+      "clawdbot --dev gateway",
+      t(
+        "cli",
+        "example.devGateway",
+        "Run a dev Gateway (isolated state/config) on ws://127.0.0.1:19001.",
+      ),
+    ],
+    [
+      "clawdbot gateway --force",
+      t(
+        "cli",
+        "example.gatewayForce",
+        "Kill anything bound to the default gateway port, then start it.",
+      ),
+    ],
+    ["clawdbot gateway ...", t("cli", "example.gatewayControl", "Gateway control via WebSocket.")],
+    [
+      'clawdbot agent --to +15555550123 --message "Run summary" --deliver',
+      t(
+        "cli",
+        "example.agentRun",
+        "Talk directly to the agent using the Gateway; optionally send the WhatsApp reply.",
+      ),
+    ],
+    [
+      'clawdbot message send --channel telegram --target @mychat --message "Hi"',
+      t("cli", "example.telegramSend", "Send via your Telegram bot."),
+    ],
+  ] as const;
 
 export function configureProgramHelp(program: Command, ctx: ProgramContext) {
   program
     .name("clawdbot")
     .description("")
-    .version(ctx.programVersion)
+    .version(
+      ctx.programVersion,
+      "-V, --version",
+      t("cli", "commands.version", "output the version number"),
+    )
+    .helpOption("-h, --help", t("cli", "options.help", "display help for command"))
     .option(
       "--dev",
-      "Dev profile: isolate state under ~/.clawdbot-dev, default gateway port 19001, and shift derived ports (browser/canvas)",
+      t(
+        "cli",
+        "option.dev",
+        "Dev profile: isolate state under ~/.clawdbot-dev, default gateway port 19001, and shift derived ports (browser/canvas)",
+      ),
     )
     .option(
       "--profile <name>",
-      "Use a named profile (isolates CLAWDBOT_STATE_DIR/CLAWDBOT_CONFIG_PATH under ~/.clawdbot-<name>)",
+      t(
+        "cli",
+        "option.profile",
+        "Use a named profile (isolates CLAWDBOT_STATE_DIR/CLAWDBOT_CONFIG_PATH under ~/.clawdbot-<name>)",
+      ),
     );
 
-  program.option("--no-color", "Disable ANSI colors", false);
+  program.option("--no-color", t("cli", "option.noColor", "Disable ANSI colors"), false);
+  program.addHelpCommand("help [command]", t("cli", "cmd.help", "display help for command"));
 
   program.configureHelp({
     optionTerm: (option) => theme.option(option.flags),
@@ -50,10 +91,13 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
 
   program.configureOutput({
     writeOut: (str) => {
+      const usageLabel = t("cli", "help.usage", "Usage:");
+      const optionsLabel = t("cli", "help.options", "Options:");
+      const commandsLabel = t("cli", "help.commands", "Commands:");
       const colored = str
-        .replace(/^Usage:/gm, theme.heading("Usage:"))
-        .replace(/^Options:/gm, theme.heading("Options:"))
-        .replace(/^Commands:/gm, theme.heading("Commands:"));
+        .replace(/^Usage:/gm, theme.heading(usageLabel))
+        .replace(/^Options:/gm, theme.heading(optionsLabel))
+        .replace(/^Commands:/gm, theme.heading(commandsLabel));
       process.stdout.write(colored);
     },
     writeErr: (str) => process.stderr.write(str),
@@ -76,13 +120,14 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
     return `\n${line}\n`;
   });
 
-  const fmtExamples = EXAMPLES.map(
-    ([cmd, desc]) => `  ${theme.command(cmd)}\n    ${theme.muted(desc)}`,
-  ).join("\n");
-
   program.addHelpText("afterAll", ({ command }) => {
     if (command !== program) return "";
+    const fmtExamples = EXAMPLES()
+      .map(([cmd, desc]) => `  ${theme.command(cmd)}\n    ${theme.muted(desc)}`)
+      .join("\n");
     const docs = formatDocsLink("/cli", "docs.clawd.bot/cli");
-    return `\n${theme.heading("Examples:")}\n${fmtExamples}\n\n${theme.muted("Docs:")} ${docs}\n`;
+    const examplesLabel = t("cli", "help.examples", "Examples:");
+    const docsLabel = t("cli", "help.docs", "Docs:");
+    return `\n${theme.heading(examplesLabel)}\n${fmtExamples}\n\n${theme.muted(docsLabel)} ${docs}\n`;
   });
 }

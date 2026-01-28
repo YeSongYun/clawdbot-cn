@@ -22,7 +22,8 @@ export function registerAcpCli(program: Command) {
     .option("--verbose, -v", "Verbose logging to stderr", false)
     .addHelpText(
       "after",
-      () => `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/acp", "docs.clawd.bot/cli/acp")}\n`,
+      () =>
+        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/acp", "docs.clawd.bot/cli/acp")}\n`,
     )
     .action((opts) => {
       try {
