@@ -1,6 +1,6 @@
 {
   "name": "@moltbot/googlechat",
-  "version": "2026.1.26",
+  "version": "2026.1.31",
   "type": "module",
   "description": "Clawdbot Google Chat channel plugin",
   "clawdbot": {
