@@ -1,4 +1,4 @@
-# Clawdbot 中文版
+# Clawdbot 中文版 - 支持自定义第三方api
 
 DMXAPI 维护的 Clawdbot 汉化版本 —— 个人 AI 助手框架，支持多平台消息集成。
 
