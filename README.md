@@ -8,35 +8,10 @@
         <img src="https://raw.githubusercontent.com/openclaw/openclaw/main/docs/assets/openclaw-logo-text.png" alt="OpenClaw" width="500">
     </picture>
 </p>
-<p align="center">
-<style>
-@keyframes neonFlow {
-    0%, 100% { 
-        background-position: 0% 50%;
-        box-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffff;
-    }
-    50% { 
-        background-position: 100% 50%;
-        box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff;
-    }
-}
-</style>
+<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=700&size=24&pause=1000&color=A855F7&center=true&vCenter=true&width=500&lines=%E7%94%B1+DMXAPI+%E7%BB%B4%E6%8A%A4%E6%B1%89%E5%8C%96" />
 
-<div style="
-    text-align: center;
-    padding: 18px 30px;
-    background: linear-gradient(90deg, #0f0c29, #302b63, #24243e, #0f0c29);
-    background-size: 200% 200%;
-    animation: neonFlow 4s ease infinite;
-    color: #fff;
-    font-size: 15px;
-    font-weight: bold;
-    border-radius: 12px;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-">
-    ✨ 由 <span style="color: #ff9ff3;">DMXAPI</span> 进行维护汉化 | 支持自定义第三方 URL 和 Key ✨
-</div>
+<img src="https://img.shields.io/badge/✨_支持自定义-第三方_URL-FF6B6B?style=flat-square" /><img src="https://img.shields.io/badge/🔑_支持自定义-API_Key-48DBFB?style=flat-square" />
+
 
 ---
 
