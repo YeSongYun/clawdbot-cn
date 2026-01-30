@@ -74,3 +74,6 @@ USER.md
 .claude/
 src/canvas-host/a2ui/.bundle.hash
 ui/package-lock.json
+
+# 计划文件
+jihua/
