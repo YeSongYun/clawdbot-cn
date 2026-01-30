@@ -1,0 +1,15 @@
+重新写一个中文的readme
+
+首先写安装方法
+npm config set registry https://npm.cnb.cool/dmxapi/openclaw-cn/-/packages/
+npm install openclaw-cn@latest
+
+然后写使用方法
+openclaw-cn reset 
+openclaw-cn onboard
+openclaw-cn gateway
+
+升级方法
+npm update -g openclaw-cn
+
+上面的方法要放在最靠前的位置，其余的内容直接汉化
