@@ -8,6 +8,7 @@
         <img src="https://raw.githubusercontent.com/openclaw/openclaw/main/docs/assets/openclaw-logo-text.png" alt="OpenClaw" width="500">
     </picture>
 </p>
+
 <img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=700&size=24&pause=1000&color=A855F7&center=true&vCenter=true&width=500&lines=%E7%94%B1+DMXAPI+%E7%BB%B4%E6%8A%A4%E6%B1%89%E5%8C%96" />
 
 <img src="https://img.shields.io/badge/✨_支持自定义-第三方_URL-FF6B6B?style=flat-square" /><img src="https://img.shields.io/badge/🔑_支持自定义-API_Key-48DBFB?style=flat-square" />
