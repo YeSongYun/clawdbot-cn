@@ -3,7 +3,7 @@ import fsp from "node:fs/promises";
 import path from "node:path";
 import type { Command } from "commander";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import type { MoltbotConfig } from "../config/config.js";
+import type { OpenClawConfig } from "../config/config.js";
 import { resolveArchiveKind } from "../infra/archive.js";
 import {
   buildWorkspaceHookStatus,
@@ -58,7 +58,7 @@ function mergeHookEntries(pluginEntries: HookEntry[], workspaceEntries: HookEntr
   return Array.from(merged.values());
 }
 
-function buildHooksReport(config: MoltbotConfig): HookStatusReport {
+function buildHooksReport(config: OpenClawConfig): HookStatusReport {
   const workspaceDir = resolveAgentWorkspaceDir(config, resolveDefaultAgentId(config));
   const workspaceEntries = loadWorkspaceHookEntries(workspaceDir, { config });
   const pluginReport = buildPluginStatusReport({ config, workspaceDir });
@@ -142,7 +142,7 @@ export function formatHooksList(report: HookStatusReport, opts: HooksListOptions
 
   if (hooks.length === 0) {
     const message = opts.eligible
-      ? `No eligible hooks found. Run \`${formatCliCommand("clawdbot hooks list")}\` to see all hooks.`
+      ? `No eligible hooks found. Run \`${formatCliCommand("openclaw hooks list")}\` to see all hooks.`
       : "No hooks found.";
     return message;
   }
@@ -198,7 +198,7 @@ export function formatHookInfo(
     if (opts.json) {
       return JSON.stringify({ error: "not found", hook: hookName }, null, 2);
     }
-    return `Hook "${hookName}" not found. Run \`${formatCliCommand("clawdbot hooks list")}\` to see available hooks.`;
+    return `Hook "${hookName}" not found. Run \`${formatCliCommand("openclaw hooks list")}\` to see available hooks.`;
   }
 
   if (opts.json) {
@@ -425,7 +425,7 @@ export function registerHooksCli(program: Command): void {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/hooks", "docs.clawd.bot/cli/hooks")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/hooks", "docs.openclaw.ai/cli/hooks")}\n`,
     );
 
   hooks
@@ -534,7 +534,7 @@ export function registerHooksCli(program: Command): void {
             process.exit(1);
           }
 
-          let next: MoltbotConfig = {
+          let next: OpenClawConfig = {
             ...cfg,
             hooks: {
               ...cfg.hooks,
@@ -595,7 +595,7 @@ export function registerHooksCli(program: Command): void {
           process.exit(1);
         }
 
-        let next: MoltbotConfig = {
+        let next: OpenClawConfig = {
           ...cfg,
           hooks: {
             ...cfg.hooks,
@@ -675,7 +675,7 @@ export function registerHooksCli(program: Command): void {
         process.exit(1);
       }
 
-      let next: MoltbotConfig = {
+      let next: OpenClawConfig = {
         ...cfg,
         hooks: {
           ...cfg.hooks,

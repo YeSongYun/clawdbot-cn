@@ -6,7 +6,7 @@ import { resolveModelAuthMode } from "../agents/model-auth.js";
 import { resolveConfiguredModelRef } from "../agents/model-selection.js";
 import { resolveSandboxRuntimeStatus } from "../agents/sandbox.js";
 import { derivePromptTokens, normalizeUsage, type UsageLike } from "../agents/usage.js";
-import type { MoltbotConfig } from "../config/config.js";
+import type { OpenClawConfig } from "../config/config.js";
 import {
   resolveMainSessionKey,
   resolveSessionFilePath,
@@ -41,7 +41,7 @@ import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from "./
 import type { MediaUnderstandingDecision } from "../media-understanding/types.js";
 import { t, ti } from "../i18n/index.js";
 
-type AgentConfig = Partial<NonNullable<NonNullable<MoltbotConfig["agents"]>["defaults"]>>;
+type AgentConfig = Partial<NonNullable<NonNullable<OpenClawConfig["agents"]>["defaults"]>>;
 
 export const formatTokenCount = formatTokenCountShared;
 
@@ -55,7 +55,7 @@ type QueueStatus = {
 };
 
 type StatusArgs = {
-  config?: MoltbotConfig;
+  config?: OpenClawConfig;
   agent: AgentConfig;
   sessionEntry?: SessionEntry;
   sessionKey?: string;
@@ -170,7 +170,7 @@ const readUsageFromSessionLog = (
       model?: string;
     }
   | undefined => {
-  // Transcripts are stored at the session file path (fallback: ~/.clawdbot/sessions/<SessionId>.jsonl)
+  // Transcripts are stored at the session file path (fallback: ~/.openclaw/sessions/<SessionId>.jsonl)
   if (!sessionId) return undefined;
   const logPath = resolveSessionFilePath(sessionId, sessionEntry);
   if (!fs.existsSync(logPath)) return undefined;
@@ -263,7 +263,7 @@ const formatMediaUnderstandingLine = (decisions?: MediaUnderstandingDecision[]) 
 };
 
 const formatVoiceModeLine = (
-  config?: MoltbotConfig,
+  config?: OpenClawConfig,
   sessionEntry?: SessionEntry,
 ): string | null => {
   if (!config) return null;
@@ -293,7 +293,7 @@ export function buildStatusMessage(args: StatusArgs): string {
       agents: {
         defaults: args.agent ?? {},
       },
-    } as MoltbotConfig,
+    } as OpenClawConfig,
     defaultProvider: DEFAULT_PROVIDER,
     defaultModel: DEFAULT_MODEL,
   });
@@ -428,8 +428,7 @@ export function buildStatusMessage(args: StatusArgs): string {
   const modelLabelText = t("status", "model.label", "Model");
   const modelLine = `🧠 ${modelLabelText}: ${modelLabel}${authLabel}`;
   const commit = resolveCommitHash();
-  const versionLabel = t("status", "version.label", "Clawdbot");
-  const versionLine = `🦞 ${versionLabel} ${VERSION}${commit ? ` (${commit})` : ""}`;
+  const versionLine = `🦞 OpenClaw ${VERSION}${commit ? ` (${commit})` : ""}`;
   const usagePair = formatUsagePair(inputTokens, outputTokens);
   const costLabelText = t("status", "cost.label", "Cost");
   const costLine = costLabel ? `💵 ${costLabelText}: ${costLabel}` : null;
@@ -492,9 +491,8 @@ function groupCommandsByCategory(
   return grouped;
 }
 
-export function buildHelpMessage(cfg?: MoltbotConfig): string {
-  const helpTitle = t("status", "help.title", "Help");
-  const lines = [`ℹ️ ${helpTitle}`, ""];
+export function buildHelpMessage(cfg?: OpenClawConfig): string {
+  const lines = ["ℹ️ Help", ""];
 
   lines.push(t("status", "help.session", "Session"));
   lines.push("  /new  |  /reset  |  /compact [instructions]  |  /stop");
@@ -604,7 +602,7 @@ function formatCommandList(items: CommandsListItem[]): string {
 }
 
 export function buildCommandsMessage(
-  cfg?: MoltbotConfig,
+  cfg?: OpenClawConfig,
   skillCommands?: SkillCommandSpec[],
   options?: CommandsMessageOptions,
 ): string {
@@ -613,7 +611,7 @@ export function buildCommandsMessage(
 }
 
 export function buildCommandsMessagePaginated(
-  cfg?: MoltbotConfig,
+  cfg?: OpenClawConfig,
   skillCommands?: SkillCommandSpec[],
   options?: CommandsMessageOptions,
 ): CommandsMessageResult {

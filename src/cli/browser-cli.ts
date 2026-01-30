@@ -21,7 +21,7 @@ import { addGatewayClientOptions } from "./gateway-rpc.js";
 export function registerBrowserCli(program: Command) {
   const browser = program
     .command("browser")
-    .description(t("cli", "cmd.browser", "Manage clawd's dedicated browser (Chrome/Chromium)"))
+    .description("Manage OpenClaw's dedicated browser (Chrome/Chromium)")
     .option("--browser-profile <name>", "Browser profile name (default from config)")
     .option("--json", "Output machine-readable JSON", false)
     .addHelpText(
@@ -32,13 +32,13 @@ export function registerBrowserCli(program: Command) {
           true,
         )}\n\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink(
           "/cli/browser",
-          "docs.molt.bot/cli/browser",
+          "docs.openclaw.ai/cli/browser",
         )}\n`,
     )
     .action(() => {
       browser.outputHelp();
       defaultRuntime.error(
-        danger(`Missing subcommand. Try: "${formatCliCommand("moltbot browser status")}"`),
+        danger(`Missing subcommand. Try: "${formatCliCommand("openclaw browser status")}"`),
       );
       defaultRuntime.exit(1);
     });

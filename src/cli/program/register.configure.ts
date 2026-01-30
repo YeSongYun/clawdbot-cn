@@ -17,7 +17,7 @@ export function registerConfigureCommand(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/configure", "docs.clawd.bot/cli/configure")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/configure", "docs.openclaw.ai/cli/configure")}\n`,
     )
     .option(
       "--section <section>",

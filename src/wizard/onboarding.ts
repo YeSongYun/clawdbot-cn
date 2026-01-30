@@ -27,7 +27,7 @@ import type {
   ResetScope,
 } from "../commands/onboard-types.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { MoltbotConfig } from "../config/config.js";
+import type { OpenClawConfig } from "../config/config.js";
 import {
   DEFAULT_GATEWAY_PORT,
   readConfigFileSnapshot,
@@ -54,12 +54,12 @@ async function requireRiskAcknowledgement(params: {
     [
       t("wizard", "security.warning", "Security warning — please read."),
       "",
-      t("wizard", "security.beta", "Clawdbot is a hobby project and still in beta. Expect sharp edges."),
-      t("wizard", "security.readFiles", "This bot can read files and run actions if tools are enabled."),
-      t("wizard", "security.badPrompt", "A bad prompt can trick it into doing unsafe things."),
+      "OpenClaw is a hobby project and still in beta. Expect sharp edges.",
+      "This bot can read files and run actions if tools are enabled.",
+      "A bad prompt can trick it into doing unsafe things.",
       "",
-      t("wizard", "security.notComfortable", "If you're not comfortable with basic security and access control, don't run Clawdbot."),
-      t("wizard", "security.askHelp", "Ask someone experienced to help before enabling tools or exposing it to the internet."),
+      "If you’re not comfortable with basic security and access control, don’t run OpenClaw.",
+      "Ask someone experienced to help before enabling tools or exposing it to the internet.",
       "",
       t("wizard", "security.baseline", "Recommended baseline:"),
       t("wizard", "security.pairing", "- Pairing/allowlists + mention gating."),
@@ -67,11 +67,11 @@ async function requireRiskAcknowledgement(params: {
       t("wizard", "security.secrets", "- Keep secrets out of the agent's reachable filesystem."),
       t("wizard", "security.strongModel", "- Use the strongest available model for any bot with tools or untrusted inboxes."),
       "",
-      t("wizard", "security.runRegularly", "Run regularly:"),
-      "clawdbot security audit --deep",
-      "clawdbot security audit --fix",
+      "Run regularly:",
+      "openclaw security audit --deep",
+      "openclaw security audit --fix",
       "",
-      `${t("wizard", "security.mustRead", "Must read:")} https://docs.clawd.bot/gateway/security`,
+      "Must read: https://docs.openclaw.ai/gateway/security",
     ].join("\n"),
     t("wizard", "security.title", "Security"),
   );
@@ -91,11 +91,11 @@ export async function runOnboardingWizard(
   prompter: WizardPrompter,
 ) {
   printWizardHeader(runtime);
-  await prompter.intro(t("wizard", "intro", "Clawdbot onboarding"));
+  await prompter.intro("OpenClaw onboarding");
   await requireRiskAcknowledgement({ opts, prompter });
 
   const snapshot = await readConfigFileSnapshot();
-  let baseConfig: MoltbotConfig = snapshot.valid ? snapshot.config : {};
+  let baseConfig: OpenClawConfig = snapshot.valid ? snapshot.config : {};
 
   if (snapshot.exists && !snapshot.valid) {
     await prompter.note(summarizeExistingConfig(baseConfig), t("wizard", "config.invalid", "Invalid config"));
@@ -104,20 +104,20 @@ export async function runOnboardingWizard(
         [
           ...snapshot.issues.map((iss) => `- ${iss.path}: ${iss.message}`),
           "",
-          "Docs: https://docs.clawd.bot/gateway/configuration",
+          "Docs: https://docs.openclaw.ai/gateway/configuration",
         ].join("\n"),
         t("wizard", "config.issues", "Config issues"),
       );
     }
     await prompter.outro(
-      t("wizard", "config.invalidRun", `Config invalid. Run \`${formatCliCommand("clawdbot doctor")}\` to repair it, then re-run onboarding.`),
+      `Config invalid. Run \`${formatCliCommand("openclaw doctor")}\` to repair it, then re-run onboarding.`,
     );
     runtime.exit(1);
     return;
   }
 
-  const quickstartHint = t("wizard", "mode.quickstartHint", `Configure details later via ${formatCliCommand("clawdbot configure")}.`);
-  const manualHint = t("wizard", "mode.manualHint", "Configure port, network, Tailscale, and auth options.");
+  const quickstartHint = `Configure details later via ${formatCliCommand("openclaw configure")}.`;
+  const manualHint = "Configure port, network, Tailscale, and auth options.";
   const explicitFlowRaw = opts.flow?.trim();
   const normalizedExplicitFlow = explicitFlowRaw === "manual" ? "advanced" : explicitFlowRaw;
   if (
@@ -279,8 +279,8 @@ export async function runOnboardingWizard(
   const localUrl = `ws://127.0.0.1:${localPort}`;
   const localProbe = await probeGatewayReachable({
     url: localUrl,
-    token: baseConfig.gateway?.auth?.token ?? process.env.CLAWDBOT_GATEWAY_TOKEN,
-    password: baseConfig.gateway?.auth?.password ?? process.env.CLAWDBOT_GATEWAY_PASSWORD,
+    token: baseConfig.gateway?.auth?.token ?? process.env.OPENCLAW_GATEWAY_TOKEN,
+    password: baseConfig.gateway?.auth?.password ?? process.env.OPENCLAW_GATEWAY_PASSWORD,
   });
   const remoteUrl = baseConfig.gateway?.remote?.url?.trim() ?? "";
   const remoteProbe = remoteUrl
@@ -336,7 +336,7 @@ export async function runOnboardingWizard(
 
   const workspaceDir = resolveUserPath(workspaceInput.trim() || DEFAULT_WORKSPACE);
 
-  let nextConfig: MoltbotConfig = {
+  let nextConfig: OpenClawConfig = {
     ...baseConfig,
     agents: {
       ...baseConfig.agents,

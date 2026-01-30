@@ -3,7 +3,7 @@ import path from "node:path";
 import type { Command } from "commander";
 
 import { loadConfig, writeConfigFile } from "../config/config.js";
-import type { MoltbotConfig } from "../config/config.js";
+import type { OpenClawConfig } from "../config/config.js";
 import { resolveArchiveKind } from "../infra/archive.js";
 import { installPluginFromNpmSpec, installPluginFromPath } from "../plugins/install.js";
 import { recordPluginInstall } from "../plugins/installs.js";
@@ -68,9 +68,9 @@ function formatPluginLine(plugin: PluginRecord, verbose = false): string {
 }
 
 function applySlotSelectionForPlugin(
-  config: MoltbotConfig,
+  config: OpenClawConfig,
   pluginId: string,
-): { config: MoltbotConfig; warnings: string[] } {
+): { config: OpenClawConfig; warnings: string[] } {
   const report = buildPluginStatusReport({ config });
   const plugin = report.plugins.find((entry) => entry.id === pluginId);
   if (!plugin) {
@@ -95,11 +95,11 @@ function logSlotWarnings(warnings: string[]) {
 export function registerPluginsCli(program: Command) {
   const plugins = program
     .command("plugins")
-    .description("Manage Clawdbot plugins/extensions")
+    .description("Manage OpenClaw plugins/extensions")
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/plugins", "docs.clawd.bot/cli/plugins")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/plugins", "docs.openclaw.ai/cli/plugins")}\n`,
     );
 
   plugins
@@ -247,7 +247,7 @@ export function registerPluginsCli(program: Command) {
     .argument("<id>", "Plugin id")
     .action(async (id: string) => {
       const cfg = loadConfig();
-      let next: MoltbotConfig = {
+      let next: OpenClawConfig = {
         ...cfg,
         plugins: {
           ...cfg.plugins,
@@ -309,7 +309,7 @@ export function registerPluginsCli(program: Command) {
             process.exit(1);
           }
 
-          let next: MoltbotConfig = {
+          let next: OpenClawConfig = {
             ...cfg,
             plugins: {
               ...cfg.plugins,
@@ -354,7 +354,7 @@ export function registerPluginsCli(program: Command) {
           process.exit(1);
         }
 
-        let next: MoltbotConfig = {
+        let next: OpenClawConfig = {
           ...cfg,
           plugins: {
             ...cfg.plugins,
@@ -418,7 +418,7 @@ export function registerPluginsCli(program: Command) {
         process.exit(1);
       }
 
-      let next: MoltbotConfig = {
+      let next: OpenClawConfig = {
         ...cfg,
         plugins: {
           ...cfg.plugins,
@@ -522,7 +522,7 @@ export function registerPluginsCli(program: Command) {
           lines.push(`- ${target}${diag.message}`);
         }
       }
-      const docs = formatDocsLink("/plugin", "docs.clawd.bot/plugin");
+      const docs = formatDocsLink("/plugin", "docs.openclaw.ai/plugin");
       lines.push("");
       lines.push(`${theme.muted(t("cli", "help.docs", "Docs:"))} ${docs}`);
       defaultRuntime.log(lines.join("\n"));

@@ -16,7 +16,8 @@ export function registerCronCli(program: Command) {
     .description("Manage cron jobs (via Gateway)")
     .addHelpText(
       "after",
-      () => `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/cron", "docs.clawd.bot/cli/cron")}\n`,
+      () =>
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/cron", "docs.openclaw.ai/cli/cron")}\n`,
     );
 
   registerCronStatusCommand(cron);

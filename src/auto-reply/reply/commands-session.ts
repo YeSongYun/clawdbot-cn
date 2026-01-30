@@ -3,8 +3,7 @@ import type { SessionEntry } from "../../config/sessions.js";
 import { updateSessionStore } from "../../config/sessions.js";
 import { logVerbose } from "../../globals.js";
 import { createInternalHookEvent, triggerInternalHook } from "../../hooks/internal-hooks.js";
-import { tr, tri } from "../../i18n/overlay-replies.js";
-import { scheduleGatewaySigusr1Restart, triggerMoltbotRestart } from "../../infra/restart.js";
+import { scheduleGatewaySigusr1Restart, triggerOpenClawRestart } from "../../infra/restart.js";
 import { parseActivationCommand } from "../group-activation.js";
 import { parseSendPolicyCommand } from "../send-policy.js";
 import { normalizeUsageDisplay, resolveResponseUsageMode } from "../thinking.js";
@@ -245,11 +244,11 @@ export const handleRestartCommand: CommandHandler = async (params, allowTextComm
     return {
       shouldContinue: false,
       reply: {
-        text: `⚙️ ${tr("restart.sigusr1", "Restarting clawdbot in-process (SIGUSR1); back in a few seconds.")}`,
+        text: "⚙️ Restarting OpenClaw in-process (SIGUSR1); back in a few seconds.",
       },
     };
   }
-  const restartMethod = triggerMoltbotRestart();
+  const restartMethod = triggerOpenClawRestart();
   if (!restartMethod.ok) {
     const detail = restartMethod.detail ? ` Details: ${restartMethod.detail}` : "";
     return {
@@ -262,7 +261,7 @@ export const handleRestartCommand: CommandHandler = async (params, allowTextComm
   return {
     shouldContinue: false,
     reply: {
-      text: `⚙️ ${tri("restart.success", `Restarting clawdbot via ${restartMethod.method}; give me a few seconds to come back online.`, { method: restartMethod.method })}`,
+      text: `⚙️ Restarting OpenClaw via ${restartMethod.method}; give me a few seconds to come back online.`,
     },
   };
 };

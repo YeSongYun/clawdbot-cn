@@ -19,7 +19,7 @@ export function registerDaemonCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/gateway", "docs.clawd.bot/cli/gateway")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/gateway", "docs.openclaw.ai/cli/gateway")}\n`,
     );
 
   daemon

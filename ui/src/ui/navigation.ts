@@ -191,7 +191,7 @@ export function subtitleForTab(tab: Tab) {
     case "chat":
       return t("nav.chat.subtitle", "Direct gateway chat session for quick interventions.");
     case "config":
-      return t("nav.config.subtitle", "Edit ~/.clawdbot/moltbot.json safely.");
+      return "Edit ~/.openclaw/openclaw.json safely.";
     case "debug":
       return t("nav.debug.subtitle", "Gateway snapshots, events, and manual RPC calls.");
     case "logs":

@@ -18,7 +18,7 @@ export function registerNodesCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink("/cli/nodes", "docs.clawd.bot/cli/nodes")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/nodes", "docs.openclaw.ai/cli/nodes")}\n`,
     );
 
   registerNodesStatusCommands(nodes);

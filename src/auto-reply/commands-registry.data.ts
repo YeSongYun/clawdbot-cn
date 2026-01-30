@@ -378,7 +378,7 @@ function buildChatCommands(): ChatCommandDefinition[] {
     defineChatCommand({
       key: "restart",
       nativeName: "restart",
-      description: "Restart Moltbot.",
+      description: "Restart OpenClaw.",
       textAlias: "/restart",
       category: "tools",
     }),
