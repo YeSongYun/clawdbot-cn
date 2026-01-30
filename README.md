@@ -1,4 +1,6 @@
-# 🦞 OpenClaw — 个人 AI 助手
+# 🦞 OpenClaw-cn — 个人 AI 助手中文版
+
+
 
 <p align="center">
     <picture>
@@ -6,13 +8,35 @@
         <img src="https://raw.githubusercontent.com/openclaw/openclaw/main/docs/assets/openclaw-logo-text.png" alt="OpenClaw" width="500">
     </picture>
 </p>
-
 <p align="center">
-  <a href="https://github.com/openclaw/openclaw/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/openclaw/openclaw/ci.yml?branch=main&style=for-the-badge" alt="CI 状态"></a>
-  <a href="https://github.com/openclaw/openclaw/releases"><img src="https://img.shields.io/github/v/release/openclaw/openclaw?include_prereleases&style=for-the-badge" alt="GitHub 发布"></a>
-  <a href="https://discord.gg/clawd"><img src="https://img.shields.io/discord/1456350064065904867?label=Discord&logo=discord&logoColor=white&color=5865F2&style=for-the-badge" alt="Discord"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT 许可证"></a>
-</p>
+<style>
+@keyframes neonFlow {
+    0%, 100% { 
+        background-position: 0% 50%;
+        box-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffff;
+    }
+    50% { 
+        background-position: 100% 50%;
+        box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff;
+    }
+}
+</style>
+
+<div style="
+    text-align: center;
+    padding: 18px 30px;
+    background: linear-gradient(90deg, #0f0c29, #302b63, #24243e, #0f0c29);
+    background-size: 200% 200%;
+    animation: neonFlow 4s ease infinite;
+    color: #fff;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+">
+    ✨ 由 <span style="color: #ff9ff3;">DMXAPI</span> 进行维护汉化 | 支持自定义第三方 URL 和 Key ✨
+</div>
 
 ---
 
@@ -62,21 +86,6 @@ npm update -g openclaw-cn
 ### 相关链接
 
 [官网](https://openclaw.ai) · [文档](https://docs.openclaw.ai) · [DeepWiki](https://deepwiki.com/openclaw/openclaw) · [入门指南](https://docs.openclaw.ai/start/getting-started) · [更新指南](https://docs.openclaw.ai/install/updating) · [展示](https://docs.openclaw.ai/start/showcase) · [常见问题](https://docs.openclaw.ai/start/faq) · [向导](https://docs.openclaw.ai/start/wizard) · [Nix](https://github.com/openclaw/nix-clawdbot) · [Docker](https://docs.openclaw.ai/install/docker) · [Discord](https://discord.gg/clawd)
-
----
-
-## 🤖 支持的 AI 模型
-
-**订阅服务 (OAuth):**
-- **[Anthropic](https://www.anthropic.com/)** (Claude Pro/Max)
-- **[OpenAI](https://openai.com/)** (ChatGPT/Codex)
-
-**模型建议:** 虽然支持任何模型，但强烈推荐 **Anthropic Pro/Max (100/200) + Opus 4.5**，因为它具有更强的长上下文能力和更好的提示注入防护。详见 [引导配置](https://docs.openclaw.ai/start/onboarding)。
-
-### 模型配置
-
-- 模型配置 + CLI: [模型](https://docs.openclaw.ai/concepts/models)
-- 认证配置轮换 (OAuth vs API 密钥) + 故障转移: [模型故障转移](https://docs.openclaw.ai/concepts/model-failover)
 
 ---
 
