@@ -466,7 +466,7 @@ describe("createTelegramBot", () => {
     const [chatId, messageId, text, params] = editMessageTextSpy.mock.calls[0] ?? [];
     expect(chatId).toBe(1234);
     expect(messageId).toBe(12);
-    expect(String(text)).toContain("ℹ️ Commands");
+    expect(String(text)).toContain("ℹ️ 命令");
     expect(params).toEqual(
       expect.objectContaining({
         reply_markup: expect.any(Object),

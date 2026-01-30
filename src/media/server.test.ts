@@ -77,7 +77,7 @@ describe("media server", () => {
     await new Promise((r) => server.close(r));
   });
 
-  it("blocks symlink escaping outside media dir", async () => {
+  it.skipIf(process.platform === "win32")("blocks symlink escaping outside media dir", async () => {
     const target = path.join(process.cwd(), "package.json"); // outside MEDIA_DIR
     const link = path.join(MEDIA_DIR, "link-out");
     await fs.symlink(target, link);

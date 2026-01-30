@@ -117,7 +117,7 @@ describe("handleCommands gating", () => {
     const params = buildParams("/config show", cfg);
     const result = await handleCommands(params);
     expect(result.shouldContinue).toBe(false);
-    expect(result.reply?.text).toContain("/config is disabled");
+    expect(result.reply?.text).toContain("/config 已禁用");
   });
 
   it("blocks /debug when disabled", async () => {
@@ -128,7 +128,7 @@ describe("handleCommands gating", () => {
     const params = buildParams("/debug show", cfg);
     const result = await handleCommands(params);
     expect(result.shouldContinue).toBe(false);
-    expect(result.reply?.text).toContain("/debug is disabled");
+    expect(result.reply?.text).toContain("/debug 已禁用");
   });
 });
 
@@ -431,6 +431,6 @@ describe("handleCommands /tts", () => {
     const params = buildParams("/tts", cfg);
     const result = await handleCommands(params);
     expect(result.shouldContinue).toBe(false);
-    expect(result.reply?.text).toContain("TTS status");
+    expect(result.reply?.text).toContain("TTS 状态");
   });
 });

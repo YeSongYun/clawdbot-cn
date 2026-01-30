@@ -120,6 +120,6 @@ describe("handleCommands /config configWrites gating", () => {
     const params = buildParams('/config set messages.ackReaction=":)"', cfg);
     const result = await handleCommands(params);
     expect(result.shouldContinue).toBe(false);
-    expect(result.reply?.text).toContain("Config writes are disabled");
+    expect(result.reply?.text).toContain("配置写入已为 whatsapp 禁用");
   });
 });

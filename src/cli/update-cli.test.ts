@@ -185,7 +185,7 @@ describe("update-cli", () => {
     await updateStatusCommand({ json: false });
 
     const logs = vi.mocked(defaultRuntime.log).mock.calls.map((call) => call[0]);
-    expect(logs.join("\n")).toContain("Moltbot update status");
+    expect(logs.join("\n")).toContain("Clawdbot update status");
   });
 
   it("updateStatusCommand emits JSON", async () => {
