@@ -1,7 +1,7 @@
 {
-  "description": "Clawdbot - AI 聊天机器人框架",
-  "commands.start": "启动 Clawdbot 网关",
-  "commands.stop": "停止 Clawdbot 网关",
+  "description": "OpenClaw - AI 聊天机器人框架",
+  "commands.start": "启动 OpenClaw 网关",
+  "commands.stop": "停止 OpenClaw 网关",
   "commands.status": "显示网关状态",
   "commands.config": "管理配置",
   "commands.configure": "交互式配置向导",
@@ -36,8 +36,8 @@
   "help.examples": "示例:",
   "help.docs": "文档:",
 
-  "option.dev": "开发配置：将状态隔离在 ~/.clawdbot-dev 下，默认网关端口 19001，并偏移派生端口（浏览器/画布）",
-  "option.profile": "使用命名配置（将 CLAWDBOT_STATE_DIR/CLAWDBOT_CONFIG_PATH 隔离在 ~/.clawdbot-<name> 下）",
+  "option.dev": "开发配置：将状态隔离在 ~/.openclaw-dev 下，默认网关端口 19001，并偏移派生端口（浏览器/画布）",
+  "option.profile": "使用命名配置（将 OPENCLAW_STATE_DIR/OPENCLAW_CONFIG_PATH 隔离在 ~/.openclaw-<name> 下）",
   "option.noColor": "禁用 ANSI 颜色",
 
   "example.channelsLogin": "链接个人 WhatsApp Web 并显示二维码和连接日志。",
@@ -49,7 +49,7 @@
   "example.agentRun": "直接通过网关与代理对话；可选发送 WhatsApp 回复。",
   "example.telegramSend": "通过 Telegram 机器人发送。",
 
-  "cmd.setup": "初始化 ~/.clawdbot/clawdbot.json 和代理工作区",
+  "cmd.setup": "初始化 ~/.openclaw/openclaw.json 和代理工作区",
   "cmd.onboard": "交互式向导设置网关、工作区和技能",
   "cmd.configure": "交互式提示设置凭证、设备和代理默认值",
   "cmd.config": "配置助手（get/set/unset）。不带子命令运行启动向导。",
@@ -134,7 +134,7 @@
   "status.serviceConfigIssueLabel": "服务配置问题:",
   "status.recommendation": "建议：运行",
   "status.configMismatchCause": "根本原因：CLI 和服务使用了不同的配置路径（可能是 profile/state-dir 不匹配）。",
-  "status.configMismatchFix": "修复：使用相同的 --profile / CLAWDBOT_STATE_DIR 重新运行",
+  "status.configMismatchFix": "修复：使用相同的 --profile / OPENCLAW_STATE_DIR 重新运行",
   "status.warmUp": "预热：启动代理可能需要几秒钟。请稍后重试。",
   "status.systemdUnavailable": "systemd 用户服务不可用。",
   "status.serviceUnitNotFound": "服务单元未找到。",

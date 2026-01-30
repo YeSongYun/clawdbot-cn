@@ -1,5 +1,4 @@
 import type { Command } from "commander";
-import { t } from "../../i18n/index.js";
 import { formatDocsLink } from "../../terminal/links.js";
 import { isRich, theme } from "../../terminal/theme.js";
 import { formatCliBannerLine, hasEmittedCliBanner } from "../banner.js";
@@ -35,12 +34,7 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
   program
     .name(CLI_NAME)
     .description("")
-    .version(
-      ctx.programVersion,
-      "-V, --version",
-      t("cli", "commands.version", "output the version number"),
-    )
-    .helpOption("-h, --help", t("cli", "options.help", "display help for command"))
+    .version(ctx.programVersion)
     .option(
       "--dev",
       "Dev profile: isolate state under ~/.openclaw-dev, default gateway port 19001, and shift derived ports (browser/canvas)",
@@ -50,8 +44,7 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
       "Use a named profile (isolates OPENCLAW_STATE_DIR/OPENCLAW_CONFIG_PATH under ~/.openclaw-<name>)",
     );
 
-  program.option("--no-color", t("cli", "option.noColor", "Disable ANSI colors"), false);
-  program.addHelpCommand("help [command]", t("cli", "cmd.help", "display help for command"));
+  program.option("--no-color", "Disable ANSI colors", false);
 
   program.configureHelp({
     optionTerm: (option) => theme.option(option.flags),
@@ -60,13 +53,10 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
 
   program.configureOutput({
     writeOut: (str) => {
-      const usageLabel = t("cli", "help.usage", "Usage:");
-      const optionsLabel = t("cli", "help.options", "Options:");
-      const commandsLabel = t("cli", "help.commands", "Commands:");
       const colored = str
-        .replace(/^Usage:/gm, theme.heading(usageLabel))
-        .replace(/^Options:/gm, theme.heading(optionsLabel))
-        .replace(/^Commands:/gm, theme.heading(commandsLabel));
+        .replace(/^Usage:/gm, theme.heading("Usage:"))
+        .replace(/^Options:/gm, theme.heading("Options:"))
+        .replace(/^Commands:/gm, theme.heading("Commands:"));
       process.stdout.write(colored);
     },
     writeErr: (str) => process.stderr.write(str),
@@ -89,9 +79,9 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
     return `\n${line}\n`;
   });
 
-  const fmtExamples = EXAMPLES()
-    .map(([cmd, desc]) => `  ${theme.command(replaceCliName(cmd, CLI_NAME))}\n    ${theme.muted(desc)}`)
-    .join("\n");
+  const fmtExamples = EXAMPLES.map(
+    ([cmd, desc]) => `  ${theme.command(replaceCliName(cmd, CLI_NAME))}\n    ${theme.muted(desc)}`,
+  ).join("\n");
 
   program.addHelpText("afterAll", ({ command }) => {
     if (command !== program) return "";

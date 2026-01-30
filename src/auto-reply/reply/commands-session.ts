@@ -54,7 +54,7 @@ export const handleActivationCommand: CommandHandler = async (params, allowTextC
   if (!params.isGroup) {
     return {
       shouldContinue: false,
-      reply: { text: `⚙️ ${tr("activation.groupOnly", "Group activation only applies to group chats.")}` },
+      reply: { text: "⚙️ Group activation only applies to group chats." },
     };
   }
   if (!params.command.isAuthorizedSender) {
@@ -66,7 +66,7 @@ export const handleActivationCommand: CommandHandler = async (params, allowTextC
   if (!activationCommand.mode) {
     return {
       shouldContinue: false,
-      reply: { text: `⚙️ ${tr("activation.usage", "Usage: /activation mention|always")}` },
+      reply: { text: "⚙️ Usage: /activation mention|always" },
     };
   }
   if (params.sessionEntry && params.sessionStore && params.sessionKey) {
@@ -83,7 +83,7 @@ export const handleActivationCommand: CommandHandler = async (params, allowTextC
   return {
     shouldContinue: false,
     reply: {
-      text: `⚙️ ${tri("activation.set", `Group activation set to ${activationCommand.mode}.`, { mode: activationCommand.mode })}`,
+      text: `⚙️ Group activation set to ${activationCommand.mode}.`,
     },
   };
 };
@@ -101,7 +101,7 @@ export const handleSendPolicyCommand: CommandHandler = async (params, allowTextC
   if (!sendPolicyCommand.mode) {
     return {
       shouldContinue: false,
-      reply: { text: `⚙️ ${tr("send.usage", "Usage: /send on|off|inherit")}` },
+      reply: { text: "⚙️ Usage: /send on|off|inherit" },
     };
   }
   if (params.sessionEntry && params.sessionStore && params.sessionKey) {
@@ -126,7 +126,7 @@ export const handleSendPolicyCommand: CommandHandler = async (params, allowTextC
         : "off";
   return {
     shouldContinue: false,
-    reply: { text: `⚙️ ${tri("send.set", `Send policy set to ${label}.`, { label })}` },
+    reply: { text: `⚙️ Send policy set to ${label}.` },
   };
 };
 
@@ -157,41 +157,34 @@ export const handleUsageCommand: CommandHandler = async (params, allowTextComman
       ? formatTokenCount(sessionSummary.totalTokens)
       : undefined;
     const sessionMissing = sessionSummary?.missingCostEntries ?? 0;
-    const partialLabel = tr("usage.partial", "(partial)");
-    const sessionSuffix = sessionMissing > 0 ? ` ${partialLabel}` : "";
-    const tokensLabel = tr("usage.tokens", "tokens");
-    const naLabel = tr("usage.na", "n/a");
-    const sessionLabel = tr("usage.session", "Session");
+    const sessionSuffix = sessionMissing > 0 ? " (partial)" : "";
     const sessionLine =
       sessionCost || sessionTokens
-        ? `${sessionLabel} ${sessionCost ?? naLabel}${sessionSuffix}${sessionTokens ? ` · ${sessionTokens} ${tokensLabel}` : ""}`
-        : `${sessionLabel} ${naLabel}`;
+        ? `Session ${sessionCost ?? "n/a"}${sessionSuffix}${sessionTokens ? ` · ${sessionTokens} tokens` : ""}`
+        : "Session n/a";
 
     const todayKey = new Date().toLocaleDateString("en-CA");
     const todayEntry = summary.daily.find((entry) => entry.date === todayKey);
     const todayCost = formatUsd(todayEntry?.totalCost);
     const todayMissing = todayEntry?.missingCostEntries ?? 0;
-    const todaySuffix = todayMissing > 0 ? ` ${partialLabel}` : "";
-    const todayLabel = tr("usage.today", "Today");
-    const todayLine = `${todayLabel} ${todayCost ?? naLabel}${todaySuffix}`;
+    const todaySuffix = todayMissing > 0 ? " (partial)" : "";
+    const todayLine = `Today ${todayCost ?? "n/a"}${todaySuffix}`;
 
     const last30Cost = formatUsd(summary.totals.totalCost);
     const last30Missing = summary.totals.missingCostEntries;
-    const last30Suffix = last30Missing > 0 ? ` ${partialLabel}` : "";
-    const last30Label = tr("usage.last30d", "Last 30d");
-    const last30Line = `${last30Label} ${last30Cost ?? naLabel}${last30Suffix}`;
+    const last30Suffix = last30Missing > 0 ? " (partial)" : "";
+    const last30Line = `Last 30d ${last30Cost ?? "n/a"}${last30Suffix}`;
 
-    const costTitle = tr("usage.cost", "Usage cost");
     return {
       shouldContinue: false,
-      reply: { text: `💸 ${costTitle}\n${sessionLine}\n${todayLine}\n${last30Line}` },
+      reply: { text: `💸 Usage cost\n${sessionLine}\n${todayLine}\n${last30Line}` },
     };
   }
 
   if (rawArgs && !requested) {
     return {
       shouldContinue: false,
-      reply: { text: `⚙️ ${tr("usage.usage", "Usage: /usage off|tokens|full|cost")}` },
+      reply: { text: "⚙️ Usage: /usage off|tokens|full|cost" },
     };
   }
 
@@ -216,7 +209,7 @@ export const handleUsageCommand: CommandHandler = async (params, allowTextComman
   return {
     shouldContinue: false,
     reply: {
-      text: `⚙️ ${tri("usage.footer", `Usage footer: ${next}.`, { mode: next })}`,
+      text: `⚙️ Usage footer: ${next}.`,
     },
   };
 };
@@ -234,7 +227,7 @@ export const handleRestartCommand: CommandHandler = async (params, allowTextComm
     return {
       shouldContinue: false,
       reply: {
-        text: `⚠️ ${tr("restart.disabled", "/restart is disabled. Set commands.restart=true to enable.")}`,
+        text: "⚠️ /restart is disabled. Set commands.restart=true to enable.",
       },
     };
   }
@@ -254,7 +247,7 @@ export const handleRestartCommand: CommandHandler = async (params, allowTextComm
     return {
       shouldContinue: false,
       reply: {
-        text: `⚠️ ${tri("restart.failed", `Restart failed (${restartMethod.method}).${detail}`, { method: restartMethod.method, detail })}`,
+        text: `⚠️ Restart failed (${restartMethod.method}).${detail}`,
       },
     };
   }
@@ -349,5 +342,5 @@ export const handleAbortTrigger: CommandHandler = async (params, allowTextComman
   } else if (params.command.abortKey) {
     setAbortMemory(params.command.abortKey, true);
   }
-  return { shouldContinue: false, reply: { text: `⚙️ ${tr("stop.aborted", "Agent was aborted.")}` } };
+  return { shouldContinue: false, reply: { text: "⚙️ Agent was aborted." } };
 };

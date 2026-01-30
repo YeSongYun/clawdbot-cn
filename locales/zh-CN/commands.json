@@ -28,7 +28,7 @@
   "usage.description": "使用量页脚或成本摘要。",
   "usage.args.mode": "off、tokens、full 或 cost",
   "stop.description": "停止当前运行。",
-  "restart.description": "重启 Clawdbot。",
+  "restart.description": "重启 OpenClaw。",
   "activation.description": "设置群组激活模式。",
   "activation.args.mode": "mention 或 always",
   "send.description": "设置发送策略。",

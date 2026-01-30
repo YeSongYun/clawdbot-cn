@@ -1,3 +1,8 @@
+import {
+  buildDmxapiModelDefinition,
+  DMXAPI_DEFAULT_BASE_URL,
+  DMXAPI_MODEL_CATALOG,
+} from "../agents/dmxapi-models.js";
 import { buildXiaomiProvider, XIAOMI_DEFAULT_MODEL_ID } from "../agents/models-config.providers.js";
 import {
   buildSyntheticModelDefinition,
@@ -13,6 +18,7 @@ import {
 } from "../agents/venice-models.js";
 import type { OpenClawConfig } from "../config/config.js";
 import {
+  DMXAPI_DEFAULT_MODEL_REF,
   OPENROUTER_DEFAULT_MODEL_REF,
   VERCEL_AI_GATEWAY_DEFAULT_MODEL_REF,
   XIAOMI_DEFAULT_MODEL_REF,
@@ -489,9 +495,9 @@ export function applyVeniceConfig(cfg: OpenClawConfig): OpenClawConfig {
  * Registers DMXAPI models and sets up the provider, but preserves existing model selection.
  */
 export function applyDmxapiProviderConfig(
-  cfg: MoltbotConfig,
+  cfg: OpenClawConfig,
   baseUrl: string = DMXAPI_DEFAULT_BASE_URL,
-): MoltbotConfig {
+): OpenClawConfig {
   const models = { ...cfg.agents?.defaults?.models };
   models[DMXAPI_DEFAULT_MODEL_REF] = {
     ...models[DMXAPI_DEFAULT_MODEL_REF],
@@ -541,9 +547,9 @@ export function applyDmxapiProviderConfig(
  * Use this when DMXAPI is the primary provider choice during onboarding.
  */
 export function applyDmxapiConfig(
-  cfg: MoltbotConfig,
+  cfg: OpenClawConfig,
   baseUrl: string = DMXAPI_DEFAULT_BASE_URL,
-): MoltbotConfig {
+): OpenClawConfig {
   const next = applyDmxapiProviderConfig(cfg, baseUrl);
   const existingModel = next.agents?.defaults?.model;
   return {

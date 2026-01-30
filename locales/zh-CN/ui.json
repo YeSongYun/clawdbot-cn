@@ -25,7 +25,7 @@
   "nav.skills.subtitle": "管理技能可用性和 API 密钥注入。",
   "nav.nodes.subtitle": "已配对设备、能力和命令暴露。",
   "nav.chat.subtitle": "直连网关聊天会话，快速干预。",
-  "nav.config.subtitle": "安全编辑 ~/.clawdbot/clawdbot.json。",
+  "nav.config.subtitle": "安全编辑 ~/.openclaw/openclaw.json。",
   "nav.debug.subtitle": "网关快照、事件和手动 RPC 调用。",
   "nav.logs.subtitle": "实时查看网关文件日志。",
 

@@ -36,10 +36,10 @@ import {
   resolveEffectiveUpdateChannel,
 } from "../infra/update-channels.js";
 import { trimLogTail } from "../infra/restart-sentinel.js";
-import { t } from "../i18n/index.js";
 import { defaultRuntime } from "../runtime.js";
 import { formatDocsLink } from "../terminal/links.js";
 import { formatCliCommand } from "./command-format.js";
+import { replaceCliName, resolveCliName } from "./cli-name.js";
 import { stylePromptHint, stylePromptMessage } from "../terminal/prompt-style.js";
 import { theme } from "../terminal/theme.js";
 import { renderTable } from "../terminal/table.js";
@@ -165,14 +165,20 @@ async function isGitCheckout(root: string): Promise<boolean> {
   }
 }
 
-async function isClawdbotPackage(root: string): Promise<boolean> {
+async function readPackageName(root: string): Promise<string | null> {
   try {
     const raw = await fs.readFile(path.join(root, "package.json"), "utf-8");
     const parsed = JSON.parse(raw) as { name?: string };
-    return parsed?.name === "clawdbot";
+    const name = parsed?.name?.trim();
+    return name ? name : null;
   } catch {
-    return false;
+    return null;
   }
+}
+
+async function isCorePackage(root: string): Promise<boolean> {
+  const name = await readPackageName(root);
+  return Boolean(name && CORE_PACKAGE_NAMES.has(name));
 }
 
 async function pathExists(targetPath: string): Promise<boolean> {
@@ -703,10 +709,13 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
       return { stdout: res.stdout, stderr: res.stderr, code: res.code };
     };
     const pkgRoot = await resolveGlobalPackageRoot(manager, runCommand, timeoutMs ?? 20 * 60_000);
+    const packageName =
+      (pkgRoot ? await readPackageName(pkgRoot) : await readPackageName(root)) ??
+      DEFAULT_PACKAGE_NAME;
     const beforeVersion = pkgRoot ? await readPackageVersion(pkgRoot) : null;
     const updateStep = await runUpdateStep({
       name: "global update",
-      argv: globalInstallArgs(manager, `clawdbot@${tag}`),
+      argv: globalInstallArgs(manager, `${packageName}@${tag}`),
       timeoutMs: timeoutMs ?? 20 * 60_000,
       progress,
     });
@@ -717,7 +726,7 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
       const entryPath = path.join(pkgRoot, "dist", "entry.js");
       if (await pathExists(entryPath)) {
         const doctorStep = await runUpdateStep({
-          name: "clawdbot doctor",
+          name: `${CLI_NAME} doctor`,
           argv: [resolveNodeRunner(), entryPath, "doctor", "--non-interactive"],
           timeoutMs: timeoutMs ?? 20 * 60_000,
           progress,
@@ -1142,7 +1151,7 @@ ${theme.heading("Non-interactive:")}
   - Use --yes to accept downgrade prompts
   - Combine with --channel/--tag/--restart/--json/--timeout as needed
 
-${theme.heading(t("cli", "help.examples", "Examples:"))}
+${theme.heading("Examples:")}
 ${fmtExamples}
 
 ${theme.heading("Notes:")}

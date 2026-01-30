@@ -72,7 +72,7 @@ describe("buildStatusMessage", () => {
     const normalized = normalizeTestText(text);
 
     expect(normalized).toContain("OpenClaw");
-    expect(normalized).toContain("Model: anthropic/pi:opus");
+    expect(normalized).toContain("模型: anthropic/pi:opus");
     expect(normalized).toContain("api-key");
     expect(normalized).toContain("令牌: 1.2k 输入 / 800 输出");
     expect(normalized).toContain("成本: $0.0020");
@@ -413,12 +413,12 @@ describe("buildCommandsMessage", () => {
     const text = buildCommandsMessage({
       commands: { config: false, debug: false },
     } as OpenClawConfig);
-    expect(text).toContain("ℹ️ Slash commands");
-    expect(text).toContain("Status");
-    expect(text).toContain("/commands - List all slash commands.");
-    expect(text).toContain("/skill - Run a skill by name.");
-    expect(text).toContain("/think (/thinking, /t) - Set thinking level.");
-    expect(text).toContain("/compact [text] - Compact the session context.");
+    expect(text).toContain("ℹ️ 斜杠命令");
+    expect(text).toContain("状态");
+    expect(text).toContain("/commands - 列出所有斜杠命令。");
+    expect(text).toContain("/skill - 按名称运行技能。");
+    expect(text).toContain("/think (/thinking, /t) - 设置思考级别。");
+    expect(text).toContain("/compact [text] - 压缩会话上下文。");
     expect(text).not.toContain("/config");
     expect(text).not.toContain("/debug");
   });
@@ -445,7 +445,7 @@ describe("buildHelpMessage", () => {
     const text = buildHelpMessage({
       commands: { config: false, debug: false },
     } as OpenClawConfig);
-    expect(text).toContain("Skills");
+    expect(text).toContain("技能");
     expect(text).toContain("/skill <name> [input]");
     expect(text).not.toContain("/config");
     expect(text).not.toContain("/debug");
