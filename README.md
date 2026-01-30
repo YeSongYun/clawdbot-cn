@@ -9,14 +9,13 @@
     </picture>
 </p>
 
-<div style="text-align: center; padding: 18px 30px; background: linear-gradient(90deg, #0f0c29, #302b63, #24243e); color: #fff; font-size: 15px; font-weight: bold; border-radius: 12px; box-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffff;">
-    ✨ 由 <span style="color: #ff9ff3;">DMXAPI</span> 进行维护汉化 | 支持自定义第三方 URL 和 Key ✨
-</div>
+<div align="center">
+
+![DMXAPI](https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=100&section=header&text=✨%20DMXAPI%20维护汉化%20✨&fontSize=24&fontColor=fff&animation=twinkling&fontAlignY=35)
 
 <img src="https://img.shields.io/badge/✨_支持自定义-第三方_URL-FF6B6B?style=flat-square" /><img src="https://img.shields.io/badge/🔑_支持自定义-API_Key-48DBFB?style=flat-square" />
 
 
----
 
 ## 🚀 快速开始
 
