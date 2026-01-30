@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import type { ClawdbotConfig } from "../../config/config.js";
+import type { MoltbotConfig } from "../../config/config.js";
 import { t } from "../../i18n/index.js";
 import { isTruthyEnvValue } from "../../infra/env.js";
 import { buildParseArgv, getPrimaryCommand, hasHelpOrVersion } from "../argv.js";
@@ -23,7 +23,7 @@ const shouldEagerRegisterSubcommands = (_argv: string[]) => {
   return isTruthyEnvValue(process.env.CLAWDBOT_DISABLE_LAZY_SUBCOMMANDS);
 };
 
-const loadConfig = async (): Promise<ClawdbotConfig> => {
+const loadConfig = async (): Promise<MoltbotConfig> => {
   const mod = await import("../../config/config.js");
   return mod.loadConfig();
 };

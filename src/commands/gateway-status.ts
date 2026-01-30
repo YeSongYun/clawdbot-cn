@@ -107,7 +107,9 @@ export async function gatewayStatusCommand(
             const base = user ? `${user}@${host.trim()}` : host.trim();
             return sshPort !== 22 ? `${base}:${sshPort}` : base;
           })
-          .filter((x): x is string => Boolean(x));
+          .filter((candidate): candidate is string =>
+            Boolean(candidate && parseSshTarget(candidate)),
+          );
         if (candidates.length > 0) sshTarget = candidates[0] ?? null;
       }
 
@@ -276,8 +278,8 @@ export async function gatewayStatusCommand(
   runtime.log(colorize(rich, theme.heading, "Discovery (this machine)"));
   runtime.log(
     discovery.length > 0
-      ? `Found ${discovery.length} gateway(s) via Bonjour (local. + clawdbot.internal.)`
-      : "Found 0 gateways via Bonjour (local. + clawdbot.internal.)",
+      ? `Found ${discovery.length} gateway(s) via Bonjour (local. + moltbot.internal.)`
+      : "Found 0 gateways via Bonjour (local. + moltbot.internal.)",
   );
   if (discovery.length === 0) {
     runtime.log(

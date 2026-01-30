@@ -1,4 +1,5 @@
 import { html, nothing } from "lit";
+import { ref } from "lit/directives/ref.js";
 import { repeat } from "lit/directives/repeat.js";
 import type { SessionsListResult } from "../types";
 import type { ChatAttachment, ChatQueueItem } from "../ui-types";
@@ -71,6 +72,11 @@ export type ChatProps = {
 };
 
 const COMPACTION_TOAST_DURATION_MS = 5000;
+
+function adjustTextareaHeight(el: HTMLTextAreaElement) {
+  el.style.height = "auto";
+  el.style.height = `${el.scrollHeight}px`;
+}
 
 function renderCompactionIndicator(status: CompactionIndicatorStatus | null | undefined) {
   if (!status) return nothing;
@@ -328,6 +334,7 @@ export function renderChat(props: ChatProps) {
           <label class="field chat-compose__field">
             <span>${t("chat.message", "Message")}</span>
             <textarea
+              ${ref((el) => el && adjustTextareaHeight(el as HTMLTextAreaElement))}
               .value=${props.draft}
               ?disabled=${!props.connected}
               @keydown=${(e: KeyboardEvent) => {
@@ -338,8 +345,11 @@ export function renderChat(props: ChatProps) {
                 e.preventDefault();
                 if (canCompose) props.onSend();
               }}
-              @input=${(e: Event) =>
-                props.onDraftChange((e.target as HTMLTextAreaElement).value)}
+              @input=${(e: Event) => {
+                const target = e.target as HTMLTextAreaElement;
+                adjustTextareaHeight(target);
+                props.onDraftChange(target.value);
+              }}
               @paste=${(e: ClipboardEvent) => handlePaste(e, props)}
               placeholder=${composePlaceholder}
             ></textarea>

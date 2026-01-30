@@ -40,7 +40,7 @@ export function registerDirectoryCli(program: Command) {
       () =>
         `\n${theme.muted(t("cli", "help.docs", "Docs:"))} ${formatDocsLink(
           "/cli/directory",
-          "docs.clawd.bot/cli/directory",
+          "docs.molt.bot/cli/directory",
         )}\n`,
     )
     .action(() => {

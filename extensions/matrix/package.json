@@ -1,9 +1,9 @@
 {
   "name": "@moltbot/matrix",
-  "version": "2026.1.31",
+  "version": "2026.1.29",
   "type": "module",
-  "description": "Clawdbot Matrix channel plugin",
-  "clawdbot": {
+  "description": "Moltbot Matrix channel plugin",
+  "moltbot": {
     "extensions": [
       "./index.ts"
     ],
@@ -31,6 +31,6 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "clawdbot": "workspace:*"
+    "moltbot": "workspace:*"
   }
 }

@@ -3,7 +3,7 @@ import fsp from "node:fs/promises";
 import path from "node:path";
 import type { Command } from "commander";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import type { ClawdbotConfig } from "../config/config.js";
+import type { MoltbotConfig } from "../config/config.js";
 import { resolveArchiveKind } from "../infra/archive.js";
 import {
   buildWorkspaceHookStatus,
@@ -58,7 +58,7 @@ function mergeHookEntries(pluginEntries: HookEntry[], workspaceEntries: HookEntr
   return Array.from(merged.values());
 }
 
-function buildHooksReport(config: ClawdbotConfig): HookStatusReport {
+function buildHooksReport(config: MoltbotConfig): HookStatusReport {
   const workspaceDir = resolveAgentWorkspaceDir(config, resolveDefaultAgentId(config));
   const workspaceEntries = loadWorkspaceHookEntries(workspaceDir, { config });
   const pluginReport = buildPluginStatusReport({ config, workspaceDir });
@@ -534,7 +534,7 @@ export function registerHooksCli(program: Command): void {
             process.exit(1);
           }
 
-          let next: ClawdbotConfig = {
+          let next: MoltbotConfig = {
             ...cfg,
             hooks: {
               ...cfg.hooks,
@@ -595,7 +595,7 @@ export function registerHooksCli(program: Command): void {
           process.exit(1);
         }
 
-        let next: ClawdbotConfig = {
+        let next: MoltbotConfig = {
           ...cfg,
           hooks: {
             ...cfg.hooks,
@@ -675,7 +675,7 @@ export function registerHooksCli(program: Command): void {
         process.exit(1);
       }
 
-      let next: ClawdbotConfig = {
+      let next: MoltbotConfig = {
         ...cfg,
         hooks: {
           ...cfg.hooks,

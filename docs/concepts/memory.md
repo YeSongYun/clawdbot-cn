@@ -1,12 +1,12 @@
 ---
-summary: "How Clawdbot memory works (workspace files + automatic memory flush)"
+summary: "How Moltbot memory works (workspace files + automatic memory flush)"
 read_when:
   - You want the memory file layout and workflow
   - You want to tune the automatic pre-compaction memory flush
 ---
 # Memory
 
-Clawdbot memory is **plain Markdown in the agent workspace**. The files are the
+Moltbot memory is **plain Markdown in the agent workspace**. The files are the
 source of truth; the model only "remembers" what gets written to disk.
 
 Memory search tools are provided by the active memory plugin (default:
@@ -36,7 +36,7 @@ These files live under the workspace (`agents.defaults.workspace`, default
 
 ## Automatic memory flush (pre-compaction ping)
 
-When a session is **close to auto-compaction**, Clawdbot triggers a **silent,
+When a session is **close to auto-compaction**, Moltbot triggers a **silent,
 agentic turn** that reminds the model to write durable memory **before** the
 context is compacted. The default prompts explicitly say the model *may reply*,
 but usually `NO_REPLY` is the correct response so the user never sees this turn.
@@ -75,13 +75,14 @@ For the full compaction lifecycle, see
 
 ## Vector memory search
 
-Clawdbot can build a small vector index over `MEMORY.md` and `memory/*.md` so
-semantic queries can find related notes even when wording differs.
+Moltbot can build a small vector index over `MEMORY.md` and `memory/*.md` (plus
+any extra directories or files you opt in) so semantic queries can find related
+notes even when wording differs.
 
 Defaults:
 - Enabled by default.
 - Watches memory files for changes (debounced).
-- Uses remote embeddings by default. If `memorySearch.provider` is not set, Clawdbot auto-selects:
+- Uses remote embeddings by default. If `memorySearch.provider` is not set, Moltbot auto-selects:
   1. `local` if a `memorySearch.local.modelPath` is configured and the file exists.
   2. `openai` if an OpenAI key can be resolved.
   3. `gemini` if a Gemini key can be resolved.
@@ -89,12 +90,33 @@ Defaults:
 - Local mode uses node-llama-cpp and may require `pnpm approve-builds`.
 - Uses sqlite-vec (when available) to accelerate vector search inside SQLite.
 
-Remote embeddings **require** an API key for the embedding provider. Clawdbot
+Remote embeddings **require** an API key for the embedding provider. Moltbot
 resolves keys from auth profiles, `models.providers.*.apiKey`, or environment
 variables. Codex OAuth only covers chat/completions and does **not** satisfy
 embeddings for memory search. For Gemini, use `GEMINI_API_KEY` or
 `models.providers.google.apiKey`. When using a custom OpenAI-compatible endpoint,
 set `memorySearch.remote.apiKey` (and optional `memorySearch.remote.headers`).
+
+### Additional memory paths
+
+If you want to index Markdown files outside the default workspace layout, add
+explicit paths:
+
+```json5
+agents: {
+  defaults: {
+    memorySearch: {
+      extraPaths: ["../team-docs", "/srv/shared-notes/overview.md"]
+    }
+  }
+}
+```
+
+Notes:
+- Paths can be absolute or workspace-relative.
+- Directories are scanned recursively for `.md` files.
+- Only Markdown files are indexed.
+- Symlinks are ignored (files or directories).
 
 ### Gemini embeddings (native)
 
@@ -189,23 +211,23 @@ Local mode:
 ### How the memory tools work
 
 - `memory_search` semantically searches Markdown chunks (~400 token target, 80-token overlap) from `MEMORY.md` + `memory/**/*.md`. It returns snippet text (capped ~700 chars), file path, line range, score, provider/model, and whether we fell back from local → remote embeddings. No full file payload is returned.
-- `memory_get` reads a specific memory Markdown file (workspace-relative), optionally from a starting line and for N lines. Paths outside `MEMORY.md` / `memory/` are rejected.
+- `memory_get` reads a specific memory Markdown file (workspace-relative), optionally from a starting line and for N lines. Paths outside `MEMORY.md` / `memory/` are allowed only when explicitly listed in `memorySearch.extraPaths`.
 - Both tools are enabled only when `memorySearch.enabled` resolves true for the agent.
 
 ### What gets indexed (and when)
 
-- File type: Markdown only (`MEMORY.md`, `memory/**/*.md`).
+- File type: Markdown only (`MEMORY.md`, `memory/**/*.md`, plus any `.md` files under `memorySearch.extraPaths`).
 - Index storage: per-agent SQLite at `~/.clawdbot/memory/<agentId>.sqlite` (configurable via `agents.defaults.memorySearch.store.path`, supports `{agentId}` token).
-- Freshness: watcher on `MEMORY.md` + `memory/` marks the index dirty (debounce 1.5s). Sync is scheduled on session start, on search, or on an interval and runs asynchronously. Session transcripts use delta thresholds to trigger background sync.
-- Reindex triggers: the index stores the embedding **provider/model + endpoint fingerprint + chunking params**. If any of those change, Clawdbot automatically resets and reindexes the entire store.
+- Freshness: watcher on `MEMORY.md`, `memory/`, and `memorySearch.extraPaths` marks the index dirty (debounce 1.5s). Sync is scheduled on session start, on search, or on an interval and runs asynchronously. Session transcripts use delta thresholds to trigger background sync.
+- Reindex triggers: the index stores the embedding **provider/model + endpoint fingerprint + chunking params**. If any of those change, Moltbot automatically resets and reindexes the entire store.
 
 ### Hybrid search (BM25 + vector)
 
-When enabled, Clawdbot combines:
+When enabled, Moltbot combines:
 - **Vector similarity** (semantic match, wording can differ)
 - **BM25 keyword relevance** (exact tokens like IDs, env vars, code symbols)
 
-If full-text search is unavailable on your platform, Clawdbot falls back to vector-only search.
+If full-text search is unavailable on your platform, Moltbot falls back to vector-only search.
 
 #### Why hybrid?
 
@@ -266,7 +288,7 @@ agents: {
 
 ### Embedding cache
 
-Clawdbot can cache **chunk embeddings** in SQLite so reindexing and frequent updates (especially session transcripts) don't re-embed unchanged text.
+Moltbot can cache **chunk embeddings** in SQLite so reindexing and frequent updates (especially session transcripts) don't re-embed unchanged text.
 
 Config:
 
@@ -326,7 +348,7 @@ agents: {
 
 ### SQLite vector acceleration (sqlite-vec)
 
-When the sqlite-vec extension is available, Clawdbot stores embeddings in a
+When the sqlite-vec extension is available, Moltbot stores embeddings in a
 SQLite virtual table (`vec0`) and performs vector distance queries in the
 database. This keeps search fast without loading every embedding into JS.
 
@@ -350,7 +372,7 @@ agents: {
 Notes:
 - `enabled` defaults to true; when disabled, search falls back to in-process
   cosine similarity over stored embeddings.
-- If the sqlite-vec extension is missing or fails to load, Clawdbot logs the
+- If the sqlite-vec extension is missing or fails to load, Moltbot logs the
   error and continues with the JS fallback (no vector table).
 - `extensionPath` overrides the bundled sqlite-vec path (useful for custom builds
   or non-standard install locations).

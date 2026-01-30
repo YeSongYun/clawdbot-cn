@@ -63,5 +63,8 @@
   "channels.skip": "跳过频道设置。",
   "channels.title": "频道",
   "skills.skip": "跳过技能设置。",
-  "skills.title": "技能"
+  "skills.title": "技能",
+  "auth.xiaomi.title": "小米 MiMo API",
+  "auth.xiaomi.description": "使用小米 MiMo 模型",
+  "auth.xiaomi.apiKey": "小米 API 密钥"
 }

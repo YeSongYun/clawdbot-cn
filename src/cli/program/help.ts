@@ -3,7 +3,10 @@ import { t } from "../../i18n/index.js";
 import { formatDocsLink } from "../../terminal/links.js";
 import { isRich, theme } from "../../terminal/theme.js";
 import { formatCliBannerLine, hasEmittedCliBanner } from "../banner.js";
+import { replaceCliName, resolveCliName } from "../cli-name.js";
 import type { ProgramContext } from "./context.js";
+
+const CLI_NAME = resolveCliName();
 
 const EXAMPLES = () =>
   [
@@ -56,7 +59,7 @@ const EXAMPLES = () =>
 
 export function configureProgramHelp(program: Command, ctx: ProgramContext) {
   program
-    .name("clawdbot")
+    .name(CLI_NAME)
     .description("")
     .version(
       ctx.programVersion,
@@ -120,11 +123,12 @@ export function configureProgramHelp(program: Command, ctx: ProgramContext) {
     return `\n${line}\n`;
   });
 
+  const fmtExamples = EXAMPLES()
+    .map(([cmd, desc]) => `  ${theme.command(replaceCliName(cmd, CLI_NAME))}\n    ${theme.muted(desc)}`)
+    .join("\n");
+
   program.addHelpText("afterAll", ({ command }) => {
     if (command !== program) return "";
-    const fmtExamples = EXAMPLES()
-      .map(([cmd, desc]) => `  ${theme.command(cmd)}\n    ${theme.muted(desc)}`)
-      .join("\n");
     const docs = formatDocsLink("/cli", "docs.clawd.bot/cli");
     const examplesLabel = t("cli", "help.examples", "Examples:");
     const docsLabel = t("cli", "help.docs", "Docs:");

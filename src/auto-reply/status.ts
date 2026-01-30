@@ -6,7 +6,7 @@ import { resolveModelAuthMode } from "../agents/model-auth.js";
 import { resolveConfiguredModelRef } from "../agents/model-selection.js";
 import { resolveSandboxRuntimeStatus } from "../agents/sandbox.js";
 import { derivePromptTokens, normalizeUsage, type UsageLike } from "../agents/usage.js";
-import type { ClawdbotConfig } from "../config/config.js";
+import type { MoltbotConfig } from "../config/config.js";
 import {
   resolveMainSessionKey,
   resolveSessionFilePath,
@@ -41,7 +41,7 @@ import type { ElevatedLevel, ReasoningLevel, ThinkLevel, VerboseLevel } from "./
 import type { MediaUnderstandingDecision } from "../media-understanding/types.js";
 import { t, ti } from "../i18n/index.js";
 
-type AgentConfig = Partial<NonNullable<NonNullable<ClawdbotConfig["agents"]>["defaults"]>>;
+type AgentConfig = Partial<NonNullable<NonNullable<MoltbotConfig["agents"]>["defaults"]>>;
 
 export const formatTokenCount = formatTokenCountShared;
 
@@ -55,7 +55,7 @@ type QueueStatus = {
 };
 
 type StatusArgs = {
-  config?: ClawdbotConfig;
+  config?: MoltbotConfig;
   agent: AgentConfig;
   sessionEntry?: SessionEntry;
   sessionKey?: string;
@@ -263,7 +263,7 @@ const formatMediaUnderstandingLine = (decisions?: MediaUnderstandingDecision[]) 
 };
 
 const formatVoiceModeLine = (
-  config?: ClawdbotConfig,
+  config?: MoltbotConfig,
   sessionEntry?: SessionEntry,
 ): string | null => {
   if (!config) return null;
@@ -293,7 +293,7 @@ export function buildStatusMessage(args: StatusArgs): string {
       agents: {
         defaults: args.agent ?? {},
       },
-    } as ClawdbotConfig,
+    } as MoltbotConfig,
     defaultProvider: DEFAULT_PROVIDER,
     defaultModel: DEFAULT_MODEL,
   });
@@ -492,7 +492,7 @@ function groupCommandsByCategory(
   return grouped;
 }
 
-export function buildHelpMessage(cfg?: ClawdbotConfig): string {
+export function buildHelpMessage(cfg?: MoltbotConfig): string {
   const helpTitle = t("status", "help.title", "Help");
   const lines = [`ℹ️ ${helpTitle}`, ""];
 
@@ -604,7 +604,7 @@ function formatCommandList(items: CommandsListItem[]): string {
 }
 
 export function buildCommandsMessage(
-  cfg?: ClawdbotConfig,
+  cfg?: MoltbotConfig,
   skillCommands?: SkillCommandSpec[],
   options?: CommandsMessageOptions,
 ): string {
@@ -613,7 +613,7 @@ export function buildCommandsMessage(
 }
 
 export function buildCommandsMessagePaginated(
-  cfg?: ClawdbotConfig,
+  cfg?: MoltbotConfig,
   skillCommands?: SkillCommandSpec[],
   options?: CommandsMessageOptions,
 ): CommandsMessageResult {

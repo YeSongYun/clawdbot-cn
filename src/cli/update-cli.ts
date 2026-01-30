@@ -5,7 +5,7 @@ import path from "node:path";
 import type { Command } from "commander";
 
 import { readConfigFileSnapshot, writeConfigFile } from "../config/config.js";
-import { resolveClawdbotPackageRoot } from "../infra/clawdbot-root.js";
+import { resolveMoltbotPackageRoot } from "../infra/moltbot-root.js";
 import {
   checkUpdateStatus,
   compareSemverStrings,
@@ -323,7 +323,7 @@ export async function updateStatusCommand(opts: UpdateStatusOptions): Promise<vo
   }
 
   const root =
-    (await resolveClawdbotPackageRoot({
+    (await resolveMoltbotPackageRoot({
       moduleUrl: import.meta.url,
       argv1: process.argv[1],
       cwd: process.cwd(),
@@ -563,7 +563,7 @@ export async function updateCommand(opts: UpdateCommandOptions): Promise<void> {
   }
 
   const root =
-    (await resolveClawdbotPackageRoot({
+    (await resolveMoltbotPackageRoot({
       moduleUrl: import.meta.url,
       argv1: process.argv[1],
       cwd: process.cwd(),
@@ -971,7 +971,7 @@ export async function updateWizardCommand(opts: UpdateWizardOptions = {}): Promi
   }
 
   const root =
-    (await resolveClawdbotPackageRoot({
+    (await resolveMoltbotPackageRoot({
       moduleUrl: import.meta.url,
       argv1: process.argv[1],
       cwd: process.cwd(),

@@ -4,7 +4,7 @@ import { updateSessionStore } from "../../config/sessions.js";
 import { logVerbose } from "../../globals.js";
 import { createInternalHookEvent, triggerInternalHook } from "../../hooks/internal-hooks.js";
 import { tr, tri } from "../../i18n/overlay-replies.js";
-import { scheduleGatewaySigusr1Restart, triggerClawdbotRestart } from "../../infra/restart.js";
+import { scheduleGatewaySigusr1Restart, triggerMoltbotRestart } from "../../infra/restart.js";
 import { parseActivationCommand } from "../group-activation.js";
 import { parseSendPolicyCommand } from "../send-policy.js";
 import { normalizeUsageDisplay, resolveResponseUsageMode } from "../thinking.js";
@@ -249,7 +249,7 @@ export const handleRestartCommand: CommandHandler = async (params, allowTextComm
       },
     };
   }
-  const restartMethod = triggerClawdbotRestart();
+  const restartMethod = triggerMoltbotRestart();
   if (!restartMethod.ok) {
     const detail = restartMethod.detail ? ` Details: ${restartMethod.detail}` : "";
     return {
