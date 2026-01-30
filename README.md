@@ -9,7 +9,9 @@
     </picture>
 </p>
 
-<img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=700&size=24&pause=1000&color=A855F7&center=true&vCenter=true&width=500&lines=%E7%94%B1+DMXAPI+%E7%BB%B4%E6%8A%A4%E6%B1%89%E5%8C%96" />
+<div style="text-align: center; padding: 18px 30px; background: linear-gradient(90deg, #0f0c29, #302b63, #24243e); color: #fff; font-size: 15px; font-weight: bold; border-radius: 12px; box-shadow: 0 0 20px #ff00ff, 0 0 40px #00ffff;">
+    ✨ 由 <span style="color: #ff9ff3;">DMXAPI</span> 进行维护汉化 | 支持自定义第三方 URL 和 Key ✨
+</div>
 
 <img src="https://img.shields.io/badge/✨_支持自定义-第三方_URL-FF6B6B?style=flat-square" /><img src="https://img.shields.io/badge/🔑_支持自定义-API_Key-48DBFB?style=flat-square" />
 
